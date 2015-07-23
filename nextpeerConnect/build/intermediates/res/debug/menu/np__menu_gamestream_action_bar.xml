@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" >
+
+    <item
+        android:id="@+id/np__gamestream_action_bar_post_button"
+        android:icon="@drawable/np__ic_gamestream_action_bar_post"
+        android:showAsAction="ifRoom"
+        android:title=""/>
+
+</menu><!-- From: file:/C:/Users/Juan/Desktop/CODA-MASTERS/ProyectosV2/roleMaker/nextpeerConnect/src/main/res/menu/np__menu_gamestream_action_bar.xml -->

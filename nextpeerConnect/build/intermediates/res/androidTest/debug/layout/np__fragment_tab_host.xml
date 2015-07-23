@@ -1,0 +1,12 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <FrameLayout
+        android:id="@+id/np__page_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" 
+        android:background="@color/np__transparent_background">
+    </FrameLayout>
+</LinearLayout><!-- From: file:/C:/Users/Juan/Desktop/CODA-MASTERS/ProyectosV2/roleMaker/nextpeerConnect/src/main/res/layout/np__fragment_tab_host.xml --><!-- From: file:/C:/Users/Juan/Desktop/CODA-MASTERS/ProyectosV2/roleMaker/nextpeerConnect/build/intermediates/bundles/debug/res/layout/np__fragment_tab_host.xml -->

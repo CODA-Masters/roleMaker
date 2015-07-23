@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+  android:shape="oval">
+  <solid
+    android:color="@color/np__palette_orange" />
+</shape><!-- From: file:/C:/Users/Juan/Desktop/CODA-MASTERS/ProyectosV2/roleMaker/nextpeerConnect/src/main/res/drawable/np__notification_rank_list_badge.xml --><!-- From: file:/C:/Users/Juan/Desktop/CODA-MASTERS/ProyectosV2/roleMaker/nextpeerConnect/build/intermediates/bundles/debug/res/drawable/np__notification_rank_list_badge.xml -->

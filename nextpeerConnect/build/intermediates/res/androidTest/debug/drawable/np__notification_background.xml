@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"  android:shape="rectangle">  
+    <solid android:color="@color/np__transparent_background"/>
+    <corners android:radius="30dip"/>
+</shape><!-- From: file:/C:/Users/Juan/Desktop/CODA-MASTERS/ProyectosV2/roleMaker/nextpeerConnect/src/main/res/drawable/np__notification_background.xml --><!-- From: file:/C:/Users/Juan/Desktop/CODA-MASTERS/ProyectosV2/roleMaker/nextpeerConnect/build/intermediates/bundles/debug/res/drawable/np__notification_background.xml -->

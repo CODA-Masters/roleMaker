@@ -18,6 +18,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.nextpeer.android.Nextpeer;
+import com.nextpeer.android.NextpeerListener;
+import com.nextpeer.android.NextpeerTournamentEndData;
+import com.nextpeer.android.NextpeerTournamentStartData;
+
 
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -45,7 +50,27 @@ public class MainActivity extends ActionBarActivity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+
+        // Get your Game-Key from Nextpeer developers dashboard.
+        Nextpeer.initialize(this, "f8e0c89af56e4033899ba4046ba3fe54", mNextpeerListener);
     }
+
+    public void onMultiplayerButtonClicked(View v) {
+        Nextpeer.launch();
+    }
+
+    // Will be used by Nextpeer to report on various events
+    private NextpeerListener mNextpeerListener = new NextpeerListener() {
+
+        /* NextpeerListener mandatory methods */
+        public void onTournamentStart(NextpeerTournamentStartData startData) {
+            // Start the game scene
+        }
+
+        public void onTournamentEnd(NextpeerTournamentEndData endData) {
+            // End the game scene, switch to main menu
+        }
+    };
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {

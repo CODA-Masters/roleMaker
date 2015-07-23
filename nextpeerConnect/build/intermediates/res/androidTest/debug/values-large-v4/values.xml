@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- From: file:/C:/Users/Juan/Desktop/CODA-MASTERS/ProyectosV2/roleMaker/nextpeerConnect/build/intermediates/bundles/debug/res/values-large-v4/values.xml -->
+    <eat-comment/>
+    <dimen name="np__game_mode_2_or_less_buttons_mode_button_size">346dp</dimen>
+    <dimen name="np__game_mode_3_buttons_mode_button_size">245dp</dimen>
+    <dimen name="np__game_mode_4_or_more_buttons_mode_button_size">220dp</dimen>
+    <dimen name="np__game_mode_max_text_size">60sp</dimen>
+    <dimen name="np__game_mode_min_text_size">30sp</dimen>
+    <dimen name="np__game_stream_item_content_image_height">300dp</dimen>
+    <dimen name="np__game_stream_item_post_header_picture_default_size">60dp</dimen>
+    <dimen name="np__widget_button_shadow_seen_padding">2dp</dimen>
+    <dimen name="np__widget_button_shadow_size">4dp</dimen>
+</resources>

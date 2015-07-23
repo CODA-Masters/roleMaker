@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/nextpeerConnect/nextpeerConnect.iml" filepath="$PROJECT_DIR$/nextpeerConnect/nextpeerConnect.iml" />
       <module fileurl="file://$PROJECT_DIR$/roleMaker.iml" filepath="$PROJECT_DIR$/roleMaker.iml" />
     </modules>
   </component>
