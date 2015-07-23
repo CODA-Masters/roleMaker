@@ -1,8 +1,0 @@
-<com.nextpeer.android.open.ui.NPCircleButton xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/np__game_mode_item_button"
-    style="@style/NP__.Widget.Button"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="@string/np__application_name" />
-<!-- From: file:/C:/Users/Juan/Desktop/CODA-MASTERS/ProyectosV2/roleMaker/nextpeerConnect/src/main/res/layout/np__layout_game_mode_item.xml -->

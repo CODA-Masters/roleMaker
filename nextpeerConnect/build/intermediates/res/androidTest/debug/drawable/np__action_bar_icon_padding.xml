@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<layer-list
-    xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-        android:drawable="@drawable/np__ic_action_bar_logo"
-        android:left="@dimen/np__action_bar_home_button_left_margin"
-        android:right="@dimen/np__action_bar_home_button_right_margin"/>
-</layer-list><!-- From: file:/C:/Users/Juan/Desktop/CODA-MASTERS/ProyectosV2/roleMaker/nextpeerConnect/src/main/res/drawable/np__action_bar_icon_padding.xml --><!-- From: file:/C:/Users/Juan/Desktop/CODA-MASTERS/ProyectosV2/roleMaker/nextpeerConnect/build/intermediates/bundles/debug/res/drawable/np__action_bar_icon_padding.xml -->
