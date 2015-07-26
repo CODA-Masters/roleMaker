@@ -11,6 +11,7 @@ import com.google.android.gcm.server.Message;
 import com.google.android.gcm.server.Result;
 import com.google.android.gcm.server.Sender;
 import com.google.api.server.spi.config.Api;
+import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
 
 import java.io.IOException;
@@ -45,6 +46,32 @@ public class MessagingEndpoint {
      *
      * @param message The message to send
      */
+
+    @ApiMethod(name = "sendText")
+    public void sendText(@Named("message") String message) throws IOException {
+        if (message == null || message.trim().length() == 0) {
+            log.warning("Not sending message because it is empty");
+            return;
+        }
+        // crop longer messages
+        if (message.length() > 1000) {
+            message = message.substring(0, 1000) + "[...]";
+        }
+
+        Sender sender = new Sender(API_KEY);
+        Message msg = new Message.Builder().addData("message", message).build();
+
+        List<UserRecord> records = ofy().load().type(UserRecord.class).limit(10).list();
+
+        for (UserRecord record : records) {
+
+            // Función send --> Parámetros : mensaje, ID del usuario, número de intentos de envio
+
+            Result result = sender.send(msg, record.getRegId(), 1);
+        }
+    }
+
+
     public void sendMessage(@Named("message") String message) throws IOException {
         if (message == null || message.trim().length() == 0) {
             log.warning("Not sending message because it is empty");
@@ -62,7 +89,6 @@ public class MessagingEndpoint {
         List<UserRecord> records = ofy().load().type(UserRecord.class).limit(10).list();
 
 
-
         for (UserRecord record : records) {
 
             // Función send --> Parámetros : mensaje, ID del usuario, número de intentos de envio
@@ -70,22 +96,13 @@ public class MessagingEndpoint {
             Result result = sender.send(msg, record.getRegId(), 5);
 
             if (result.getMessageId() != null) {
-                log.info("Message sent to " + record.getRegId());
-                String canonicalRegId = result.getCanonicalRegistrationId();
-                if (canonicalRegId != null) {
-                    // if the regId changed, we have to update the datastore
-                    log.info("Registration Id changed for " + record.getRegId() + " updating to " + canonicalRegId);
-                    record.setRegId(canonicalRegId);
-                    ofy().save().entity(record).now();
-                }
-            } else {
-                String error = result.getErrorCodeName();
-                if (error.equals(Constants.ERROR_NOT_REGISTERED)) {
-                    log.warning("Registration Id " + record.getRegId() + " no longer registered with GCM, removing from datastore");
-                    // if the device is no longer registered with Gcm, remove it from the datastore
-                    ofy().delete().entity(record).now();
-                } else {
-                    log.warning("Error when sending message : " + error);
+                        log.info("Message sent to " + record.getRegId());
+                        String canonicalRegId = result.getCanonicalRegistrationId();
+                        if (canonicalRegId != null) {
+                            // if the regId changed, we have to update the datastore
+                            log.info("Registration Id changed for " + record.getRegId() + " updating to " + canonicalRegId);
+                            record.setRegId(canonicalRegId);
+                            ofy().save().entity(record).now();
                 }
             }
         }

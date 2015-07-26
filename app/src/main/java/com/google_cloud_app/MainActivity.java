@@ -1,6 +1,7 @@
 package com.google_cloud_app;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Pair;
@@ -9,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import cloud_controller.GcmMessageAsyncTask;
 import cloud_controller.GcmRegistrationAsyncTask;
 
 
@@ -24,7 +26,6 @@ public class MainActivity extends ActionBarActivity {
 
         //Endpoint call
         //new EndpointsAsyncTask().execute(new Pair<Context, String>(this, "Ajay Ramesh "));
-
 
     }
 
@@ -43,6 +44,16 @@ public class MainActivity extends ActionBarActivity {
         new GcmRegistrationAsyncTask(this, regName,  regEmail, regPassword).execute();
     }
 
+    public void openChat (View view){
+        Intent i = new Intent(this, ChatActivity.class);
+        startActivity(i);
+    }
+
+    public void basurear (){
+
+
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

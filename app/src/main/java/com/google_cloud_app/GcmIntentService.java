@@ -35,18 +35,22 @@ public class GcmIntentService extends IntentService {
             if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
                 Logger.getLogger("GCM_RECEIVED").log(Level.INFO, extras.toString());
 
-                showToast(extras.getString("message"));
+                addText(extras.getString("message"));
             }
         }
         GcmBroadcastReceiver.completeWakefulIntent(intent);
     }
 
-    protected void showToast(final String message) {
+    protected void addText(final String message) {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
+
             @Override
             public void run() {
-                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+                ChatActivity.updateMessages(message);
             }
         });
     }
+
+
+
 }

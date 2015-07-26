@@ -1,6 +1,6 @@
 {
  "kind": "discovery#restDescription",
- "etag": "\"u_zXkMELIlX4ktyNbM2XKD4vK8E/8GKhtUIXYw2ewqj_rIXQ6wIP6SY\"",
+ "etag": "\"u_zXkMELIlX4ktyNbM2XKD4vK8E/Ozswysh90Z4wt51iqD796_YNerU\"",
  "discoveryVersion": "v1",
  "id": "messaging:v1",
  "name": "messaging",
@@ -13,10 +13,10 @@
   "x32": "http://www.google.com/images/icons/product/search-32.gif"
  },
  "protocol": "rest",
- "baseUrl": "https://myApplicationId.appspot.com/_ah/api/messaging/v1/sendMessage/",
- "basePath": "/_ah/api/messaging/v1/sendMessage/",
+ "baseUrl": "https://myApplicationId.appspot.com/_ah/api/messaging/v1/",
+ "basePath": "/_ah/api/messaging/v1/",
  "rootUrl": "https://myApplicationId.appspot.com/_ah/api/",
- "servicePath": "messaging/v1/sendMessage/",
+ "servicePath": "messaging/v1/",
  "batchPath": "batch",
  "parameters": {
   "alt": {
@@ -72,12 +72,32 @@
    }
   }
  },
+ "methods": {
+  "sendText": {
+   "id": "messaging.sendText",
+   "path": "sendText/{message}",
+   "httpMethod": "POST",
+   "parameters": {
+    "message": {
+     "type": "string",
+     "required": true,
+     "location": "path"
+    }
+   },
+   "parameterOrder": [
+    "message"
+   ],
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  }
+ },
  "resources": {
   "messagingEndpoint": {
    "methods": {
     "sendMessage": {
      "id": "messaging.messagingEndpoint.sendMessage",
-     "path": "{message}",
+     "path": "sendMessage/{message}",
      "httpMethod": "POST",
      "parameters": {
       "message": {
