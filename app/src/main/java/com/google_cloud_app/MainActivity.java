@@ -9,9 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import cloud_controller.EndpointsAsyncTask;
 import cloud_controller.GcmRegistrationAsyncTask;
-import cloud_controller.ServletPostAsyncTask;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -19,7 +17,7 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_sign_up_screen);
 
         //Servlet Call
         //new ServletPostAsyncTask().execute(new Pair<Context, String>(this, "Ajay Ramesh"));
@@ -33,10 +31,16 @@ public class MainActivity extends ActionBarActivity {
     public void registerButton (View view){
         //Gcm Registration
 
-        TextView tv = (TextView) findViewById(R.id.userName);
+        TextView tv = (TextView) findViewById(R.id.regName);
         String regName = tv.getText().toString();
 
-        new GcmRegistrationAsyncTask(this, regName).execute();
+        tv = (TextView) findViewById(R.id.regEmail);
+        String regEmail = tv.getText().toString();
+
+        tv = (TextView) findViewById(R.id.regPassword);
+        String regPassword = tv.getText().toString();
+
+        new GcmRegistrationAsyncTask(this, regName,  regEmail, regPassword).execute();
     }
 
 

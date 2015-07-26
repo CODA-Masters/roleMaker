@@ -19,9 +19,13 @@ public class UserRecord {
     Long id;
 
     @Index
+    private String name;
+
+    @Index
     private String regId;
     // you can add more fields...
-    private String name;
+
+    @Index
     private String email;
     private String password;
 
@@ -36,16 +40,8 @@ public class UserRecord {
         this.password = password;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getEmail() {
         return email;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public String getPassword() {
@@ -54,6 +50,14 @@ public class UserRecord {
 
     public String getRegId() {
         return regId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setRegId(String regId) {

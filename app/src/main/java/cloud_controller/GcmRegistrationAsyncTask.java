@@ -2,7 +2,6 @@ package cloud_controller;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -22,13 +21,13 @@ public class GcmRegistrationAsyncTask extends AsyncTask<Context, Void, String> {
     private static Registration regService = null;
     private GoogleCloudMessaging gcm;
     private Context context;
-    private String regName;
+    private String regName, regEmail, regPassword;
 
     // TODO: change to your own sender ID to Google Developers Console project number, as per instructions above
     private static final String SENDER_ID = "294669629340";
 
-    public GcmRegistrationAsyncTask(Context context, String regName) {
-        this.context = context; this.regName = regName;
+    public GcmRegistrationAsyncTask(Context context, String regName, String regEmail, String regPassword) {
+        this.context = context; this.regName = regName; this.regEmail = regEmail; this.regPassword = regPassword;
     }
 
     @Override
@@ -57,6 +56,8 @@ public class GcmRegistrationAsyncTask extends AsyncTask<Context, Void, String> {
             if (gcm == null) {
                 gcm = GoogleCloudMessaging.getInstance(context);
             }
+
+
             String regId = gcm.register(SENDER_ID);
             msg = "Device registered, registration ID=" + regId;
 
@@ -65,7 +66,8 @@ public class GcmRegistrationAsyncTask extends AsyncTask<Context, Void, String> {
             // so it can use GCM/HTTP or CCS to send messages to your app.
             // The request to your server should be authenticated if your app
             // is using accounts.
-            regService.register(regId, regName).execute();
+            regService.register(regName, regId, regEmail, regPassword).execute();
+
 
         } catch (IOException ex) {
             ex.printStackTrace();

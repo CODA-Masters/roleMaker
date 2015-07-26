@@ -1,6 +1,6 @@
 {
  "kind": "discovery#restDescription",
- "etag": "\"u_zXkMELIlX4ktyNbM2XKD4vK8E/DIkKOkCuAioEUA8vWAdWrhimhjI\"",
+ "etag": "\"u_zXkMELIlX4ktyNbM2XKD4vK8E/rZ_na3Xamf2QjsBSpsmY0NN1sTs\"",
  "discoveryVersion": "v1",
  "id": "registration:v1",
  "name": "registration",
@@ -132,9 +132,14 @@
   },
   "register": {
    "id": "registration.register",
-   "path": "registerDevice/{regId}/{regName}",
+   "path": "registerDevice/{regName}/{regId}/{regEmail}/{regPassword}",
    "httpMethod": "POST",
    "parameters": {
+    "regEmail": {
+     "type": "string",
+     "required": true,
+     "location": "path"
+    },
     "regId": {
      "type": "string",
      "required": true,
@@ -144,11 +149,18 @@
      "type": "string",
      "required": true,
      "location": "path"
+    },
+    "regPassword": {
+     "type": "string",
+     "required": true,
+     "location": "path"
     }
    },
    "parameterOrder": [
+    "regName",
     "regId",
-    "regName"
+    "regEmail",
+    "regPassword"
    ],
    "scopes": [
     "https://www.googleapis.com/auth/userinfo.email"
