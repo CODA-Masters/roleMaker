@@ -10,10 +10,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.WakefulBroadcastReceiver;
 
+import java.util.ArrayList;
+
 /**
  * Created by Optimus on 12/26/2014.
  */
 public class GcmBroadcastReceiver extends WakefulBroadcastReceiver {
+
+    protected static ArrayList<String> auxMessages;
+
+    public GcmBroadcastReceiver(){
+    }
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -24,4 +31,13 @@ public class GcmBroadcastReceiver extends WakefulBroadcastReceiver {
         startWakefulService(context, (intent.setComponent(comp)));
         setResultCode(Activity.RESULT_OK);
     }
+
+    public static ArrayList<String> getAuxMessages() {
+        return auxMessages;
+    }
+
+    public static void setAuxMessages(ArrayList<String> auxMessages) {
+        GcmBroadcastReceiver.auxMessages = auxMessages;
+    }
+
 }

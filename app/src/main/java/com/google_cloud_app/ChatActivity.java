@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 
-
 import cloud_controller.GcmMessageAsyncTask;
 
 /**
@@ -29,6 +28,8 @@ public class ChatActivity extends ActionBarActivity {
     private ListView lv;
     private SharedPreferences prefs;
 
+    private static boolean open;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,7 +39,9 @@ public class ChatActivity extends ActionBarActivity {
         lv = (ListView) findViewById(R.id.list);
 
         //      load tasks from preference
-        SharedPreferences prefs = getSharedPreferences("SHARED_MESSAGES", Context.MODE_PRIVATE);
+        prefs = getSharedPreferences("SHARED_MESSAGES", Context.MODE_PRIVATE);
+
+
 
         try {
             resultList = (ArrayList<String>) ObjectSerializer.deserialize(prefs.getString("messages", ObjectSerializer.serialize(new ArrayList<String>())));
@@ -46,9 +49,12 @@ public class ChatActivity extends ActionBarActivity {
             e.printStackTrace();
         }
 
+
         adapter = new ArrayAdapter<String>(this, R.layout.list_item, R.id.content, resultList);
 
         lv.setAdapter(adapter);
+
+        open=true;
 
     }
 
@@ -62,6 +68,7 @@ public class ChatActivity extends ActionBarActivity {
     }
 
     public static void updateMessages(String message) {
+
         resultList.add(message);
         adapter.notifyDataSetChanged();
 
@@ -73,7 +80,7 @@ public class ChatActivity extends ActionBarActivity {
 
         // Guardamos los datos del chat
 
-        SharedPreferences prefs = getSharedPreferences("SHARED_MESSAGES", Context.MODE_PRIVATE);
+        prefs = getSharedPreferences("SHARED_MESSAGES", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         try {
             editor.putString("messages", ObjectSerializer.serialize(resultList));
@@ -82,7 +89,30 @@ public class ChatActivity extends ActionBarActivity {
         }
         editor.commit();
 
+        open=false;
     }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        open=true;
+        ArrayList<String> aux = GcmBroadcastReceiver.getAuxMessages();
+
+        if(aux!= null) {
+            for (String a : aux) {
+                resultList.add(a);
+            }
+            adapter.notifyDataSetChanged();
+        }
+
+
+        GcmBroadcastReceiver.setAuxMessages(new ArrayList<String>());
+    }
+
+    public static boolean isOpen() {
+        return open;
+    }
+
 
 
 }

@@ -9,10 +9,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.widget.Toast;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -46,11 +46,19 @@ public class GcmIntentService extends IntentService {
 
             @Override
             public void run() {
-                ChatActivity.updateMessages(message);
+                if(ChatActivity.isOpen())
+                    ChatActivity.updateMessages(message);
+                else{
+                    if(GcmBroadcastReceiver.getAuxMessages() == null){
+                        GcmBroadcastReceiver.setAuxMessages(new ArrayList<String>());
+                    }
+
+                    ArrayList<String> aux = GcmBroadcastReceiver.getAuxMessages();
+                    aux.add(message);
+                    GcmBroadcastReceiver.setAuxMessages(aux);
+                }
             }
         });
     }
-
-
 
 }

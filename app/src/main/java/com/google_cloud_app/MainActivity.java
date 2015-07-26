@@ -49,11 +49,6 @@ public class MainActivity extends ActionBarActivity {
         startActivity(i);
     }
 
-    public void basurear (){
-
-
-
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
