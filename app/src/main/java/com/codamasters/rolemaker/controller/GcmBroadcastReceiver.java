@@ -17,11 +17,6 @@ import java.util.ArrayList;
  */
 public class GcmBroadcastReceiver extends WakefulBroadcastReceiver {
 
-    protected static ArrayList<String> auxMessages;
-
-    public GcmBroadcastReceiver(){
-    }
-
     @Override
     public void onReceive(Context context, Intent intent) {
         // Explicitly specify that GcmIntentService will handle the intent.
@@ -31,13 +26,4 @@ public class GcmBroadcastReceiver extends WakefulBroadcastReceiver {
         startWakefulService(context, (intent.setComponent(comp)));
         setResultCode(Activity.RESULT_OK);
     }
-
-    public static ArrayList<String> getAuxMessages() {
-        return auxMessages;
-    }
-
-    public static void setAuxMessages(ArrayList<String> auxMessages) {
-        GcmBroadcastReceiver.auxMessages = auxMessages;
-    }
-
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
@@ -44,7 +45,6 @@ public class ChatActivity extends ActionBarActivity {
         prefs = getSharedPreferences("SHARED_MESSAGES", Context.MODE_PRIVATE);
 
 
-
         try {
             resultList = (ArrayList<String>) ObjectSerializer.deserialize(prefs.getString("messages", ObjectSerializer.serialize(new ArrayList<String>())));
         } catch (IOException e) {
@@ -72,6 +72,7 @@ public class ChatActivity extends ActionBarActivity {
     public static void updateMessages(String message) {
 
         resultList.add(message);
+        adapter.add(message);
         adapter.notifyDataSetChanged();
 
     }
@@ -97,24 +98,23 @@ public class ChatActivity extends ActionBarActivity {
     @Override
     public void onResume(){
         super.onResume();
-        open=true;
-        ArrayList<String> aux = GcmBroadcastReceiver.getAuxMessages();
 
-        if(aux!= null) {
-            for (String a : aux) {
-                resultList.add(a);
-            }
-            adapter.notifyDataSetChanged();
+        prefs = getSharedPreferences("SHARED_MESSAGES", Context.MODE_PRIVATE);
+
+        try {
+            resultList = (ArrayList<String>) ObjectSerializer.deserialize(prefs.getString("messages", ObjectSerializer.serialize(new ArrayList<String>())));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
+        adapter.notifyDataSetChanged();
+        open=true;
 
-        GcmBroadcastReceiver.setAuxMessages(new ArrayList<String>());
     }
 
     public static boolean isOpen() {
         return open;
     }
-
 
 
 }
