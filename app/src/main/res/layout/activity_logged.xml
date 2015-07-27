@@ -22,4 +22,5 @@
         android:name="com.codamasters.rolemaker.ui.NavigationDrawerFragment"
         tools:layout="@layout/fragment_navigation_drawer" />
 
+
 </android.support.v4.widget.DrawerLayout>

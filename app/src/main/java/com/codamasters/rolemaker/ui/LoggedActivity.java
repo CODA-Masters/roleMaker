@@ -1,6 +1,7 @@
 package com.codamasters.rolemaker.ui;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -51,6 +52,18 @@ public class LoggedActivity extends ActionBarActivity implements NavigationDrawe
                 .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
                 .commit();
     }
+
+    public void openChat (View view){
+        Intent i = new Intent(this, ChatActivity.class);
+        startActivity(i);
+    }
+
+    public void showUsers (View view){
+        Intent i = new Intent(this, ShowUsersActivity.class);
+        startActivity(i);
+    }
+
+
 
     public void onSectionAttached(int number) {
         switch (number) {
