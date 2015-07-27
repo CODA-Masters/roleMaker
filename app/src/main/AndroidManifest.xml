@@ -23,7 +23,7 @@
             android:name="com.codamasters.rolemaker.ui.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
-                <action android:name="android.intent.action.Mainactivity" />
+                <action android:name="android.intent.action.MainActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
@@ -33,9 +33,9 @@
             android:name="com.codamasters.rolemaker.ui.LoginActivity"
             android:label="@string/app_name" >
             <intent-filter>
-                <action android:name="android.intent.action.LoginActivity" />
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
@@ -57,30 +57,11 @@
                 <action android:name="android.intent.action.LoggedActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
+
             </intent-filter>
         </activity>
 
-        <activity
-            android:name="com.codamasters.rolemaker.ui.ChatActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.ChatActivity" />
 
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-
-        <activity
-            android:name="com.codamasters.rolemaker.ui.ShowUsersActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
 
         <receiver
             android:name="com.codamasters.rolemaker.controller.GcmBroadcastReceiver"

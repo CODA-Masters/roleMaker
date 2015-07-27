@@ -12,8 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 
-import com.codamasters.rolemaker.controller.GcmBroadcastReceiver;
-import com.codamasters.rolemaker.ui.ChatActivity;
+import com.codamasters.rolemaker.ui.ChatFragment;
 import com.codamasters.rolemaker.utils.ObjectSerializer;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
@@ -52,8 +51,8 @@ public class GcmIntentService extends IntentService {
 
             @Override
             public void run() {
-                if(ChatActivity.isOpen())
-                    ChatActivity.updateMessages(message);
+                if(ChatFragment.isOpen())
+                    ChatFragment.updateMessages(message);
                 else{
 
                     SharedPreferences prefs = getSharedPreferences("SHARED_MESSAGES", Context.MODE_PRIVATE);

@@ -4,7 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import com.codamasters.rolemaker.ui.ShowUsersActivity;
+import com.codamasters.rolemaker.ui.ShowUsersFragment;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
@@ -85,7 +85,7 @@ public class GcmShowUsersAsyncTask extends AsyncTask<Context, Void, String> {
         if (pDialog.isShowing())
             pDialog.dismiss();
 
-        ShowUsersActivity.ListUsers(users);
+        ShowUsersFragment.ListUsers(users);
 
 
     }

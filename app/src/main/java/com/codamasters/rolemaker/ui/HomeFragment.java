@@ -1,13 +1,13 @@
 package com.codamasters.rolemaker.ui;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.google_cloud_app.R;
 
@@ -22,29 +22,24 @@ import com.google_cloud_app.R;
 public class HomeFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_SECTION_NUMBER = "section_number";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    Button bOpenChat,bShowUsers;
+
 
     private OnFragmentInteractionListener mListener;
 
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+
      * @return A new instance of fragment HomeFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static HomeFragment newInstance(String param1, String param2) {
+    public static HomeFragment newInstance(int sectionNumber) {
         HomeFragment fragment = new HomeFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putInt(ARG_SECTION_NUMBER, sectionNumber);
         fragment.setArguments(args);
         return fragment;
     }
@@ -54,29 +49,47 @@ public class HomeFragment extends Fragment {
     }
 
     public void openChat (View view){
-        Intent i = new Intent(getActivity().getApplicationContext(), ChatActivity.class);
-        startActivity(i);
+        getFragmentManager().beginTransaction()
+                .addToBackStack("")
+                .replace(R.id.container,ChatFragment.newInstance(""))
+                .commit();
     }
 
     public void showUsers (View view){
-        Intent i = new Intent(getActivity().getApplicationContext(), ShowUsersActivity.class);
-        startActivity(i);
+        getFragmentManager().beginTransaction()
+                .addToBackStack("")
+                .replace(R.id.container,ShowUsersFragment.newInstance(""))
+                .commit();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        View rootView=inflater.inflate(R.layout.fragment_home, container, false);
+        bOpenChat=(Button) rootView.findViewById(R.id.bOpenChat);
+        bShowUsers=(Button) rootView.findViewById(R.id.bShowUsers);
+        setListeners();
+        return rootView;
+    }
+
+    private void setListeners(){
+        bOpenChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openChat(v);
+            }
+        });
+        bShowUsers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showUsers(v);
+            }
+        });
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -89,12 +102,8 @@ public class HomeFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        try {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
+        ((LoggedActivity) activity).onSectionAttached(
+                getArguments().getInt(ARG_SECTION_NUMBER));
     }
 
     @Override
