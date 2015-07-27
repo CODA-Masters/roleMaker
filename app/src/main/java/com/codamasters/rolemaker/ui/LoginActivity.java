@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.codamasters.rolemaker.controller.GcmLoginAsyncTask;
-import com.google_cloud_app.R;
+import com.codamasters.rolemaker.R;
 
 /**
  * Created by Julio on 27/07/2015.

@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.codamasters.rolemaker.controller.GcmMessageAsyncTask;
 import com.codamasters.rolemaker.utils.ObjectSerializer;
-import com.google_cloud_app.R;
+import com.codamasters.rolemaker.R;
 
 import java.io.IOException;
 import java.util.ArrayList;

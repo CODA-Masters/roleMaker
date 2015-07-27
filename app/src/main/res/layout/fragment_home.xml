@@ -4,8 +4,6 @@
     android:orientation="vertical">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:text="ostiaya" />
 
     <Button
         android:layout_width="wrap_content"
@@ -19,8 +17,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Show Users"
-        android:onClick="showUsers"
         android:id="@+id/bShowUsers"
+
+        />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show Friends"
+        android:id="@+id/bShowFriends"
 
         />
 

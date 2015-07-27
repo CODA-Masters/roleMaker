@@ -6,7 +6,9 @@ package gcm.backend.model;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
+import com.googlecode.objectify.annotation.Serialize;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Named;
@@ -31,9 +33,14 @@ public class UserRecord {
     private String email;
     private String password;
 
-    private List<String> friends;
+    @Serialize
+    private ArrayList<String> friends;
 
     public UserRecord() {
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public void setEmail(String email) {
@@ -68,7 +75,7 @@ public class UserRecord {
         this.regId = regId;
     }
 
-    public List<String> getFriends() {
+    public ArrayList<String> getFriends() {
         return friends;
     }
 

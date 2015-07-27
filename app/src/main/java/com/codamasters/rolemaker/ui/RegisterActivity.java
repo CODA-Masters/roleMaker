@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.codamasters.rolemaker.controller.GcmRegistrationAsyncTask;
-import com.google_cloud_app.R;
+import com.codamasters.rolemaker.R;
 
 
 public class RegisterActivity extends ActionBarActivity {

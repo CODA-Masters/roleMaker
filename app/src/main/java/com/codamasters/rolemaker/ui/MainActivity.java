@@ -9,7 +9,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.google_cloud_app.R;
+import com.codamasters.rolemaker.R;
 
 
 public class MainActivity extends Activity implements OnClickListener {

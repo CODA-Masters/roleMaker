@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.google_cloud_app.R;
+import com.codamasters.rolemaker.R;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -24,7 +24,7 @@ public class HomeFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_SECTION_NUMBER = "section_number";
 
-    Button bOpenChat,bShowUsers;
+    Button bOpenChat,bShowUsers,bShowFriends;
 
 
     private OnFragmentInteractionListener mListener;
@@ -62,6 +62,13 @@ public class HomeFragment extends Fragment {
                 .commit();
     }
 
+    public void showFriends (View view){
+        getFragmentManager().beginTransaction()
+                .addToBackStack("")
+                .replace(R.id.container,ShowFriendsFragment.newInstance(""))
+                .commit();
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,6 +80,7 @@ public class HomeFragment extends Fragment {
         View rootView=inflater.inflate(R.layout.fragment_home, container, false);
         bOpenChat=(Button) rootView.findViewById(R.id.bOpenChat);
         bShowUsers=(Button) rootView.findViewById(R.id.bShowUsers);
+        bShowFriends=(Button) rootView.findViewById(R.id.bShowFriends);
         setListeners();
         return rootView;
     }
@@ -82,6 +90,12 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 openChat(v);
+            }
+        });
+        bShowFriends.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showFriends(v);
             }
         });
         bShowUsers.setOnClickListener(new View.OnClickListener() {

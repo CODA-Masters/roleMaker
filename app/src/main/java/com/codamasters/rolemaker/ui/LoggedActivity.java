@@ -9,7 +9,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.google_cloud_app.R;
+import com.codamasters.rolemaker.R;
 
 
 public class LoggedActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {

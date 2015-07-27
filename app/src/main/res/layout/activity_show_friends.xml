@@ -12,7 +12,7 @@
         android:orientation="vertical">
 
         <ListView
-            android:id="@+id/list"
+            android:id="@+id/friendsList"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"/>
 

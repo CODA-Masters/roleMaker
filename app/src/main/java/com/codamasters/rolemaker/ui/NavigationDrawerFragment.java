@@ -21,7 +21,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.google_cloud_app.R;
+import com.codamasters.rolemaker.R;
 
 
 /**
