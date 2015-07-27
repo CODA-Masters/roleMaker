@@ -9,23 +9,5 @@
     <TextView android:id="@+id/section_label" android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Open Chat"
-        android:onClick="openChat"
-        android:id="@+id/button"
-        android:layout_below="@+id/section_label"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="176dp" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Show Users"
-        android:onClick="showUsers"
-        android:layout_below="@+id/button"
-        android:layout_alignRight="@+id/button"
-        android:layout_alignEnd="@+id/button" />
 
 </RelativeLayout>

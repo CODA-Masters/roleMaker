@@ -21,8 +21,11 @@ public class ShowUsersActivity extends ActionBarActivity {
     // Hashmap for ListView
     private LinearLayout listContainer;
     private static ArrayList<String> resultList;
+    private static ArrayList<String> requestList;
+
     private static ArrayAdapter<String> adapter;
-    private ListView lv;
+    private ListView searchListView;
+    private ListView requestListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,13 +33,15 @@ public class ShowUsersActivity extends ActionBarActivity {
         setContentView(R.layout.activity_show_users);
 
         listContainer = (LinearLayout) findViewById(R.id.contenedor_lista);
-        lv = (ListView) findViewById(R.id.list);
+        searchListView = (ListView) findViewById(R.id.searchList);
+        requestListView = (ListView) findViewById(R.id.requestList);
         resultList = new ArrayList<String>();
+        requestList = new ArrayList<String>();
 
 
         adapter = new ArrayAdapter<String>(this, R.layout.user_list_item, R.id.user_item, resultList);
 
-        lv.setAdapter(adapter);
+        searchListView.setAdapter(adapter);
 
         new GcmShowUsersAsyncTask(this).execute();
 

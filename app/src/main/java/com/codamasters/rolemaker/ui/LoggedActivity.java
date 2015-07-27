@@ -1,7 +1,6 @@
 package com.codamasters.rolemaker.ui;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -17,8 +16,7 @@ import android.view.ViewGroup;
 import com.google_cloud_app.R;
 
 
-public class LoggedActivity extends ActionBarActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+public class LoggedActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -78,17 +76,6 @@ public class LoggedActivity extends ActionBarActivity
         actionBar.setTitle(mTitle);
     }
 
-    public void openChat (View view){
-        Intent i = new Intent(this, ChatActivity.class);
-        startActivity(i);
-    }
-
-    public void showUsers (View view){
-        Intent i = new Intent(this, ShowUsersActivity.class);
-        startActivity(i);
-    }
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -118,6 +105,7 @@ public class LoggedActivity extends ActionBarActivity
     /**
      * A placeholder fragment containing a simple view.
      */
+
     public static class PlaceholderFragment extends Fragment {
         /**
          * The fragment argument representing the section number for this
