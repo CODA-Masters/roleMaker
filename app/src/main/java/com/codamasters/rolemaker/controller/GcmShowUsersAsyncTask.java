@@ -1,5 +1,6 @@
 package com.codamasters.rolemaker.controller;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 
@@ -23,12 +24,24 @@ public class GcmShowUsersAsyncTask extends AsyncTask<Context, Void, String> {
     private GoogleCloudMessaging gcm;
     private Context context;
     private ArrayList<UserRecord> users;
+    private ProgressDialog pDialog;
 
     // TODO: change to your own sender ID to Google Developers Console project number, as per instructions above
     private static final String SENDER_ID = "294669629340";
 
     public GcmShowUsersAsyncTask(Context context) {
         this.context = context;
+    }
+
+
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        // Showing progress dialog
+        pDialog = new ProgressDialog(context);
+        pDialog.setMessage("Loading users");
+        pDialog.setCancelable(false);
+        pDialog.show();
     }
 
     @Override
@@ -68,6 +81,12 @@ public class GcmShowUsersAsyncTask extends AsyncTask<Context, Void, String> {
 
     @Override
     protected void onPostExecute(String msg) {
+
+        if (pDialog.isShowing())
+            pDialog.dismiss();
+
         ShowUsersActivity.ListUsers(users);
+
+
     }
 }
