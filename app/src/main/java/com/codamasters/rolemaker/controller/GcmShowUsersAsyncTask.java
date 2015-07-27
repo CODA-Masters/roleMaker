@@ -2,7 +2,6 @@ package com.codamasters.rolemaker.controller;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.widget.Toast;
 
 import com.codamasters.rolemaker.ui.ShowUsersActivity;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -11,7 +10,6 @@ import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 import gcm.backend.registration.Registration;
 import gcm.backend.registration.model.CollectionResponseUserRecord;
@@ -24,13 +22,13 @@ public class GcmShowUsersAsyncTask extends AsyncTask<Context, Void, String> {
     private static Registration regService = null;
     private GoogleCloudMessaging gcm;
     private Context context;
-    private String regName, regEmail, regPassword;
+    private ArrayList<UserRecord> users;
 
     // TODO: change to your own sender ID to Google Developers Console project number, as per instructions above
     private static final String SENDER_ID = "294669629340";
 
-    public GcmShowUsersAsyncTask(Context context, String regName, String regEmail, String regPassword) {
-        this.context = context; this.regName = regName; this.regEmail = regEmail; this.regPassword = regPassword;
+    public GcmShowUsersAsyncTask(Context context) {
+        this.context = context;
     }
 
     @Override
@@ -57,10 +55,9 @@ public class GcmShowUsersAsyncTask extends AsyncTask<Context, Void, String> {
         String msg = "";
         try {
 
-            CollectionResponseUserRecord usersCollection = regService.listUsers(10).execute();
-            ArrayList<UserRecord> users = (ArrayList)usersCollection.getItems();
-
-            ShowUsersActivity.ListUsers(users);
+            int count = 10;
+            CollectionResponseUserRecord usersCollection = regService.listUsers(count).execute();
+            users = (ArrayList)usersCollection.getItems();
 
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -71,6 +68,6 @@ public class GcmShowUsersAsyncTask extends AsyncTask<Context, Void, String> {
 
     @Override
     protected void onPostExecute(String msg) {
-        Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+        ShowUsersActivity.ListUsers(users);
     }
 }

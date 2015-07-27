@@ -1,22 +1,15 @@
 package com.codamasters.rolemaker.ui;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 
-import com.codamasters.rolemaker.controller.GcmMessageAsyncTask;
-import com.codamasters.rolemaker.utils.ObjectSerializer;
+import com.codamasters.rolemaker.controller.GcmShowUsersAsyncTask;
 import com.google_cloud_app.R;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 import gcm.backend.registration.model.UserRecord;
 
@@ -44,6 +37,8 @@ public class ShowUsersActivity extends ActionBarActivity {
         adapter = new ArrayAdapter<String>(this, R.layout.user_list_item, R.id.user_item, resultList);
 
         lv.setAdapter(adapter);
+
+        new GcmShowUsersAsyncTask(this).execute();
 
     }
 
