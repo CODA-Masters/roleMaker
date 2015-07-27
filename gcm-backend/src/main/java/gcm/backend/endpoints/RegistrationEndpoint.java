@@ -92,4 +92,17 @@ public class RegistrationEndpoint {
         return ofy().load().type(UserRecord.class).filter("name", regName).first().now();
     }
 
+    @ApiMethod(name = "login")
+    public UserRecord login(@Named("regName") String name, @Named("regPassword") String password) {
+        UserRecord user = findRecordbyName(name);
+        if (user != null) {
+            if (password.equals(user.getPassword()))
+                return user;
+            else
+                return null;
+        } else
+            return null;
+
+    }
+
 }

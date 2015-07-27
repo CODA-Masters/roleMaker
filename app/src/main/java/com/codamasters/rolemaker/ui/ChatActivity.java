@@ -4,14 +4,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.codamasters.rolemaker.controller.GcmBroadcastReceiver;
 import com.codamasters.rolemaker.utils.ObjectSerializer;
 import com.codamasters.rolemaker.controller.GcmMessageAsyncTask;
 import com.google_cloud_app.R;
@@ -36,7 +34,7 @@ public class ChatActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_chat);
 
         listContainer = (LinearLayout) findViewById(R.id.contenedor_lista);
         lv = (ListView) findViewById(R.id.list);

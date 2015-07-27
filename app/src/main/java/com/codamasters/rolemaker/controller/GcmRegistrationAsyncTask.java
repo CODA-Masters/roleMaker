@@ -9,8 +9,6 @@ import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import gcm.backend.registration.Registration;
 
@@ -59,7 +57,7 @@ public class GcmRegistrationAsyncTask extends AsyncTask<Context, Void, String> {
 
 
             String regId = gcm.register(SENDER_ID);
-            msg = "Device registered, registration ID=" + regId;
+            msg = "Usuario '" + regName + "' registrado con éxito.";
 
 
             // You should send the registration ID to your server over HTTP,
@@ -79,6 +77,5 @@ public class GcmRegistrationAsyncTask extends AsyncTask<Context, Void, String> {
     @Override
     protected void onPostExecute(String msg) {
         Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
-        Logger.getLogger("REGISTRATION").log(Level.INFO, msg);
     }
 }
