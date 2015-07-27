@@ -60,7 +60,7 @@ public class GcmLoginAsyncTask extends AsyncTask<Context, Void, String> {
                 this.context.startActivity(i);
             }
             else{
-                Toast.makeText(context, "Usuario y/o contraseÃ±a incorrecta.", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "Usuario y/o contraseña incorrecta.", Toast.LENGTH_LONG).show();
             }
         } catch (IOException ex) {
             ex.printStackTrace();
