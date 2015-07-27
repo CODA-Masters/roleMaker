@@ -83,6 +83,11 @@ public class LoggedActivity extends ActionBarActivity
         startActivity(i);
     }
 
+    public void showUsers (View view){
+        Intent i = new Intent(this, ShowUsersActivity.class);
+        startActivity(i);
+    }
+
 
 
     @Override

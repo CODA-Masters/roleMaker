@@ -7,6 +7,8 @@ import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
 
+import java.util.List;
+
 import javax.inject.Named;
 
 /**
@@ -28,6 +30,8 @@ public class UserRecord {
     @Index
     private String email;
     private String password;
+
+    private List<String> friends;
 
     public UserRecord() {
     }
@@ -62,5 +66,17 @@ public class UserRecord {
 
     public void setRegId(String regId) {
         this.regId = regId;
+    }
+
+    public List<String> getFriends() {
+        return friends;
+    }
+
+    public void addFriend(String friend) {
+        this.friends.add(friend);
+    }
+
+    public void removeFriend(String friend) {
+        this.friends.remove(friend);
     }
 }

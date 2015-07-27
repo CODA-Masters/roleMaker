@@ -4,5 +4,6 @@
 /.idea/libraries
 .DS_Store
 /build
+/gcm-backend/build
 /gcm-backend/gcm-backend.iml
 *.class

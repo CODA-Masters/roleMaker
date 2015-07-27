@@ -11,6 +11,7 @@ import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
 import com.google.api.server.spi.response.CollectionResponse;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -66,26 +67,14 @@ public class RegistrationEndpoint {
     public void unregisterDevice(@Named("regId") String regId) {
         UserRecord record = findRecord(regId);
         if (record == null) {
-            log.info("Device " + regId + " not registered, skipping unregister");
+            log.info("User " + regId + " not registered, skipping unregister");
             return;
         }
         ofy().delete().entity(record).now();
     }
 
-    /**
-     * Return a collection of registered devices
-     *
-     * @param count The number of devices to list
-     * @return a list of Google Cloud Messaging registration Ids
-     */
-    @ApiMethod(name = "listDevices")
-    public CollectionResponse<UserRecord> listDevices(@Named("count") int count) {
-        List<UserRecord> records = ofy().load().type(UserRecord.class).limit(count).list();
-        return CollectionResponse.<UserRecord>builder().setItems(records).build();
-    }
-
-    private UserRecord findRecord(String regId) {
-        return ofy().load().type(UserRecord.class).filter("regId", regId).first().now();
+    private UserRecord findRecord(String id) {
+        return ofy().load().type(UserRecord.class).filterKey(id).first().now();
     }
 
     private UserRecord findRecordbyName(String regName) {
@@ -105,4 +94,32 @@ public class RegistrationEndpoint {
 
     }
 
+    @ApiMethod(name = "addFriend")
+    public void addFriend(@Named("userID") String userID, @Named("friendID") String friendID){
+        UserRecord user = findRecord(userID);
+        user.addFriend(friendID);
+    }
+
+    @ApiMethod(name = "removeFriend")
+    public void removeFriend(@Named("userID") String userID, @Named("friendID") String friendID){
+        UserRecord user = findRecord(userID);
+        user.removeFriend(friendID);
+    }
+
+    @ApiMethod(name = "listFriends")
+    public CollectionResponse<UserRecord> listFriends(@Named("userID") String userID){
+        UserRecord user = findRecord(userID);
+        List<UserRecord> friends = new ArrayList<UserRecord>();
+        List<String> friendsIDs = user.getFriends();
+        for(int i = 0; i < friendsIDs.size(); i++) {
+             friends.add(findRecord(friendsIDs.get(i)));
+        }
+        return CollectionResponse.<UserRecord>builder().setItems(friends).build();
+    }
+
+    @ApiMethod(name = "listUsers")
+    public CollectionResponse<UserRecord> showUsers(@Named("count") int count){
+        List<UserRecord> users = ofy().load().type(UserRecord.class).limit(count).list();
+        return CollectionResponse.<UserRecord>builder().setItems(users).build();
+    }
 }
