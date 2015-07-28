@@ -21,10 +21,18 @@
     <!-- Content label -->
     <TextView
         android:id="@+id/friend_item"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingBottom="2dip"
+        android:layout_weight="1"
         android:textSize="18sp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Remove friend"
+        android:layout_weight="0"
+        android:id="@+id/removeFriendButton" />
 
 
 </LinearLayout>

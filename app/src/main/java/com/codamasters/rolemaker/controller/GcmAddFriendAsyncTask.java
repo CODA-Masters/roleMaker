@@ -36,7 +36,7 @@ public class GcmAddFriendAsyncTask extends AsyncTask<Context, Void, String> {
         super.onPreExecute();
         // Showing progress dialog
         pDialog = new ProgressDialog(context);
-        pDialog.setMessage("Agregando colegaa");
+        pDialog.setMessage("Adding friend");
         pDialog.setCancelable(false);
         pDialog.show();
     }
