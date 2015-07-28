@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 import com.codamasters.rolemaker.ui.LoggedActivity;
+import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 
@@ -24,6 +25,7 @@ public class GcmLoginAsyncTask extends AsyncTask<Context, Void, String> {
     private Context context;
     private String regName, regPassword;
     private String error;
+    private GoogleCloudMessaging gcm;
 
     // TODO: change to your own sender ID to Google Developers Console project number, as per instructions above
     private static final String SENDER_ID = "294669629340";
@@ -60,6 +62,14 @@ public class GcmLoginAsyncTask extends AsyncTask<Context, Void, String> {
             if(user != null){
                 Intent i = new Intent(this.context, LoggedActivity.class);
                 PreferenceManager.getDefaultSharedPreferences(context).edit().putString("user", user.getId().toString()).commit();
+
+                // Actualizar id de GCM
+                if (gcm == null) {
+                    gcm = GoogleCloudMessaging.getInstance(context);
+                }
+                String regId = gcm.register(SENDER_ID);
+                regService.updateGCM(user.getId().toString(),regId).execute();
+
                 this.context.startActivity(i);
             }
             else{

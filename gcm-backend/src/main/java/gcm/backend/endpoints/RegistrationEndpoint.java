@@ -127,25 +127,22 @@ public class RegistrationEndpoint {
     @ApiMethod(name = "removeFriend")
     public void removeFriend(@Named("removeUserID") String userID, @Named("removeFriendID") String friendID){
         UserRecord user = findRecord(Long.parseLong(userID));
-        UserRecord friend = findRecord(Long.parseLong(friendID));
 
-        String[] aux = user.getFriends().split(" ");
-        String new_friends = "";
-
-        for (String s : aux){
-            if(s != friend.getName())
-                new_friends.concat(s).concat(" ");
+        JSONParser parser=new JSONParser();
+        String s = user.getFriends();
+        try {
+            Object obj = parser.parse(s);
+            JSONArray array = (JSONArray) obj;
+            array.remove(friendID);
+            s = array.toJSONString();
+        } catch (org.json.simple.parser.ParseException e) {
+            e.printStackTrace();
         }
+        user.setFriends(s);
 
-        UserRecord record = new UserRecord();
-        record.setId(user.getId());
-        record.setName(user.getName());
-        record.setRegId(user.getRegId());
-        record.setEmail(user.getEmail());
-        record.setPassword(user.getPassword());
-        record.setFriends(new_friends);
-
-        ofy().save().entity(record).now();
+        if(user != null) {
+            ofy().save().entity(user).now();
+        }
 
     }
 
@@ -159,5 +156,12 @@ public class RegistrationEndpoint {
     public CollectionResponse<UserRecord> showUsers(@Named("count") int count){
         List<UserRecord> users = ofy().load().type(UserRecord.class).limit(count).list();
         return CollectionResponse.<UserRecord>builder().setItems(users).build();
+    }
+
+    @ApiMethod(name="updateGCM")
+    public void updateGCM(@Named("userID") String userID, @Named("regId") String regID){
+        UserRecord user = findRecord(Long.parseLong(userID));
+        user.setRegId(regID);
+        ofy().save().entity(user).now();
     }
 }
