@@ -1,6 +1,7 @@
 package com.codamasters.rolemaker.ui;
 
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
@@ -54,7 +55,7 @@ public class LoggedActivity extends ActionBarActivity implements NavigationDrawe
         Fragment frag=null;
         switch (position){
             case 1:frag=HomeFragment.newInstance(position);break;
-            case 3:finish();break;
+            case 3:finish(); PreferenceManager.getDefaultSharedPreferences(this).edit().putString("user", "nothing").commit(); break;
             default:frag=HomeFragment.newInstance(position);
         }
         if(position!=3) {
@@ -90,6 +91,7 @@ public class LoggedActivity extends ActionBarActivity implements NavigationDrawe
     }
 
     public void addFriend(View view){
+
         String friendID = "";
         String friendName = ((TextView) this.findViewById(R.id.user_item)).getText().toString();
         Log.d("COLEGA", friendName);

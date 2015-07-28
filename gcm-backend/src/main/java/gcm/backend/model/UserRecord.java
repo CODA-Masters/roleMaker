@@ -31,7 +31,26 @@ public class UserRecord {
 
     private String friends;
 
+    private String friendRequestsReceived;
+    private String friendRequestsSent;
+
     public UserRecord() {
+    }
+
+    public String getFriendRequestsSent() {
+        return friendRequestsSent;
+    }
+
+    public void setFriendRequestsSent(String friendRequestsSent) {
+        this.friendRequestsSent = friendRequestsSent;
+    }
+
+    public String getFriendRequestsReceived() {
+        return friendRequestsReceived;
+    }
+
+    public void setFriendRequestsReceived(String friendRequestsReceived) {
+        this.friendRequestsReceived = friendRequestsReceived;
     }
 
     public Long getId() {
