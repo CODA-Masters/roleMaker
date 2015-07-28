@@ -67,16 +67,16 @@ public class LoggedActivity extends ActionBarActivity implements NavigationDrawe
 
     public void onSectionAttached(int number) {
         switch (number) {
-            case 1:
+            case 0:
                 mTitle = getString(R.string.title_home);
                 break;
-            case 2:
+            case 1:
                 mTitle = getString(R.string.title_game);
                 break;
-            case 3:
+            case 2:
                 mTitle = getString(R.string.title_profile);
                 break;
-            case 4:
+            case 3:
                 mTitle = getString(R.string.title_disconnect);
                 break;
         }
