@@ -51,8 +51,9 @@ public class GcmIntentService extends IntentService {
 
             @Override
             public void run() {
-                if(ChatFragment.isOpen())
+                if(ChatFragment.isOpen()) {
                     ChatFragment.updateMessages(message);
+                }
                 else{
 
                     SharedPreferences prefs = getSharedPreferences("SHARED_MESSAGES", Context.MODE_PRIVATE);

@@ -13,9 +13,9 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.codamasters.rolemaker.R;
 import com.codamasters.rolemaker.controller.GcmMessageAsyncTask;
 import com.codamasters.rolemaker.utils.ObjectSerializer;
-import com.codamasters.rolemaker.R;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -63,6 +63,8 @@ public class ChatFragment extends Fragment {
 
         //      load tasks from preference
         prefs = getActivity().getSharedPreferences("SHARED_MESSAGES", Context.MODE_PRIVATE);
+
+        resultList = new ArrayList<String>();
 
         try {
             resultList = (ArrayList<String>) ObjectSerializer.deserialize(prefs.getString("messages", ObjectSerializer.serialize(new ArrayList<String>())));
