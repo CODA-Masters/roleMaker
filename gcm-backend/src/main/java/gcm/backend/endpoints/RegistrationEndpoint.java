@@ -11,6 +11,11 @@ import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
 import com.google.api.server.spi.response.CollectionResponse;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
+import java.text.ParseException;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -53,6 +58,7 @@ public class RegistrationEndpoint {
         record.setRegId(regId);
         record.setEmail(regEmail);
         record.setPassword(regPassword);
+        record.setFriends("[]");
         ofy().save().entity(record).now();
 
     }
@@ -72,11 +78,13 @@ public class RegistrationEndpoint {
         ofy().delete().entity(record).now();
     }
 
-    private UserRecord findRecord(Long id) {
+    @ApiMethod(name = "findRecord")
+    public UserRecord findRecord(@Named("id") Long id) {
         return ofy().load().type(UserRecord.class).filter("id", id).first().now();
     }
 
-    private UserRecord findRecordbyName(String regName) {
+    @ApiMethod(name = "findRecordbyName")
+    public UserRecord findRecordbyName(@Named("regName") String regName) {
         return ofy().load().type(UserRecord.class).filter("name", regName).first().now();
     }
 
@@ -94,14 +102,24 @@ public class RegistrationEndpoint {
     }
 
     @ApiMethod(name = "addFriend")
-    public void addFriend(@Named("addUserID") String userID, @Named("addFriendID") String friendID){
+    public void addFriend(@Named("addUserID") String addUserID, @Named("addFriendID") String addFriendID){
 
-        UserRecord user = findRecord(Long.parseLong(userID));
-        UserRecord friend = findRecord(Long.parseLong(friendID));
+        UserRecord user = findRecord(Long.parseLong(addUserID));
+
+        JSONParser parser=new JSONParser();
+        String s = user.getFriends();
+        try {
+            Object obj = parser.parse(s);
+            JSONArray array = (JSONArray) obj;
+            array.add(addFriendID);
+            s = array.toJSONString();
+         } catch (org.json.simple.parser.ParseException e) {
+            e.printStackTrace();
+        }
+        user.setFriends(s);
 
         if(user != null) {
-            user.setFriends(user.getFriends().concat(friend.getName()).concat(" "));
-            ofy().save().entity(user);
+            ofy().save().entity(user).now();
         }
 
     }

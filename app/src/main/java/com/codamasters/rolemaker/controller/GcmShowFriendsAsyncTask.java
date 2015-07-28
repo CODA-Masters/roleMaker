@@ -10,9 +10,11 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 
+import org.json.simple.JSONArray;
+import org.json.simple.parser.JSONParser;
+
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import gcm.backend.registration.Registration;
 import gcm.backend.registration.model.UserRecord;
@@ -26,7 +28,7 @@ public class GcmShowFriendsAsyncTask extends AsyncTask<Context, Void, String> {
     private Context context;
     private ProgressDialog pDialog;
     private String userID;
-    private String[] friends;
+    private  ArrayList<String> friendNames;
 
     // TODO: change to your own sender ID to Google Developers Console project number, as per instructions above
     private static final String SENDER_ID = "294669629340";
@@ -71,9 +73,23 @@ public class GcmShowFriendsAsyncTask extends AsyncTask<Context, Void, String> {
         String msg = "";
         try {
             UserRecord user = regService.listFriends(userID).execute();
-            friends = user.getFriends().split(" ");
+            friendNames = new ArrayList();
+            JSONParser parser=new JSONParser();
+            String s = user.getFriends();
+            try {
+                Object obj = parser.parse(s);
+                JSONArray array = (JSONArray) obj;
+                UserRecord friend;
+                Long id;
+                for(int i = 0; i < array.size(); i++){
+                    id = Long.parseLong((String) array.get(i));
+                    friend = regService.findRecord(id).execute();
+                    friendNames.add(friend.getName());
+                }
+            } catch (org.json.simple.parser.ParseException e) {
+                e.printStackTrace();
+            }
 
-            Log.d("MOstrando", "puta basura");
         } catch (IOException ex) {
             ex.printStackTrace();
             msg = "Error: " + ex.getMessage();
@@ -87,9 +103,9 @@ public class GcmShowFriendsAsyncTask extends AsyncTask<Context, Void, String> {
         if (pDialog.isShowing())
             pDialog.dismiss();
 
-        if( friends!= null){
-            ArrayList<String> users = new ArrayList<String>(Arrays.asList(friends));
-            ShowFriendsFragment.ListUsers( users);
+        if( friendNames!= null){
+            Log.d("MI PRIMER AMIGOOOO!",friendNames.get(0));
+            ShowFriendsFragment.ListUsers(friendNames);
         }
 
         regService = null;
