@@ -46,18 +46,17 @@
             android:text="Name"
             android:ems="10"
             android:id="@+id/editText"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:layout_weight="1"
+
+            />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Search"
             android:id="@+id/buttonSearch"
-            android:layout_alignParentBottom="true"
-            android:layout_toRightOf="@+id/editText"
-            android:layout_toEndOf="@+id/editText" />
+            android:layout_weight="0"
+             />
     </LinearLayout>
 
 
