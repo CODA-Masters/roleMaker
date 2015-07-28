@@ -10,13 +10,10 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
-import com.codamasters.rolemaker.controller.GcmShowFriendsAsyncTask;
-import com.codamasters.rolemaker.controller.GcmShowUsersAsyncTask;
 import com.codamasters.rolemaker.R;
+import com.codamasters.rolemaker.controller.GcmShowFriendsAsyncTask;
 
 import java.util.ArrayList;
-
-import gcm.backend.registration.model.UserRecord;
 
 /**
  * Created by Julio on 27/07/2015.
@@ -69,12 +66,9 @@ public class ShowFriendsFragment extends Fragment {
         return rootView;
     }
 
-    public static void ListUsers(ArrayList<UserRecord> users){
-        ArrayList<String> usernames = new ArrayList<String>();
-        for(int i = 0; i < users.size(); i++){
-            usernames.add(users.get(i).getName());
-        }
-        resultList = usernames;
+    public static void ListUsers(ArrayList<String> users){
+
+        resultList = users;
         adapter.clear();
         adapter.addAll(resultList);
         adapter.notifyDataSetChanged();

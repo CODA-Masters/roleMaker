@@ -11,7 +11,6 @@ import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
 import com.google.api.server.spi.response.CollectionResponse;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -65,7 +64,7 @@ public class RegistrationEndpoint {
      */
     @ApiMethod(name = "unregister")
     public void unregisterDevice(@Named("regId") String regId) {
-        UserRecord record = findRecord(regId);
+        UserRecord record = findRecord(Long.parseLong(regId));
         if (record == null) {
             log.info("User " + regId + " not registered, skipping unregister");
             return;
@@ -73,8 +72,8 @@ public class RegistrationEndpoint {
         ofy().delete().entity(record).now();
     }
 
-    private UserRecord findRecord(String id) {
-        return ofy().load().type(UserRecord.class).filterKey(id).first().now();
+    private UserRecord findRecord(Long id) {
+        return ofy().load().type(UserRecord.class).filter("id", id).first().now();
     }
 
     private UserRecord findRecordbyName(String regName) {
@@ -95,26 +94,47 @@ public class RegistrationEndpoint {
     }
 
     @ApiMethod(name = "addFriend")
-    public void addFriend(@Named("userID") String userID, @Named("friendID") String friendID){
-        UserRecord user = findRecord(userID);
-        user.addFriend(friendID);
+    public void addFriend(@Named("addUserID") String userID, @Named("addFriendID") String friendID){
+
+        UserRecord user = findRecord(Long.parseLong(userID));
+        UserRecord friend = findRecord(Long.parseLong(friendID));
+
+        if(user != null) {
+            user.setFriends(user.getFriends().concat(friend.getName()).concat(" "));
+            ofy().save().entity(user);
+        }
+
     }
 
     @ApiMethod(name = "removeFriend")
-    public void removeFriend(@Named("userID") String userID, @Named("friendID") String friendID){
-        UserRecord user = findRecord(userID);
-        user.removeFriend(friendID);
+    public void removeFriend(@Named("removeUserID") String userID, @Named("removeFriendID") String friendID){
+        UserRecord user = findRecord(Long.parseLong(userID));
+        UserRecord friend = findRecord(Long.parseLong(friendID));
+
+        String[] aux = user.getFriends().split(" ");
+        String new_friends = "";
+
+        for (String s : aux){
+            if(s != friend.getName())
+                new_friends.concat(s).concat(" ");
+        }
+
+        UserRecord record = new UserRecord();
+        record.setId(user.getId());
+        record.setName(user.getName());
+        record.setRegId(user.getRegId());
+        record.setEmail(user.getEmail());
+        record.setPassword(user.getPassword());
+        record.setFriends(new_friends);
+
+        ofy().save().entity(record).now();
+
     }
 
     @ApiMethod(name = "listFriends")
-    public CollectionResponse<UserRecord> listFriends(@Named("userID") String userID){
-        UserRecord user = findRecord(userID);
-        List<UserRecord> friends = new ArrayList<UserRecord>();
-        List<String> friendsIDs = user.getFriends();
-        for(int i = 0; i < friendsIDs.size(); i++) {
-             friends.add(findRecord(friendsIDs.get(i)));
-        }
-        return CollectionResponse.<UserRecord>builder().setItems(friends).build();
+    public UserRecord listFriends(@Named("userID") String userID){
+        UserRecord user = findRecord(Long.parseLong(userID));
+        return user;
     }
 
     @ApiMethod(name = "listUsers")

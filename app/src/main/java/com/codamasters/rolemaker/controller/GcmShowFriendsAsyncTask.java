@@ -3,6 +3,7 @@ package com.codamasters.rolemaker.controller;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.codamasters.rolemaker.ui.ShowFriendsFragment;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -11,9 +12,9 @@ import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import gcm.backend.registration.Registration;
-import gcm.backend.registration.model.CollectionResponseUserRecord;
 import gcm.backend.registration.model.UserRecord;
 
 /**
@@ -23,16 +24,16 @@ public class GcmShowFriendsAsyncTask extends AsyncTask<Context, Void, String> {
     private static Registration regService = null;
     private GoogleCloudMessaging gcm;
     private Context context;
-    private ArrayList<UserRecord> users;
     private ProgressDialog pDialog;
-    private String id;
+    private String userID;
+    private String[] friends;
 
     // TODO: change to your own sender ID to Google Developers Console project number, as per instructions above
     private static final String SENDER_ID = "294669629340";
 
-    public GcmShowFriendsAsyncTask(Context context, String id) {
+    public GcmShowFriendsAsyncTask(Context context, String userID) {
         this.context = context;
-        this.id = id;
+        this.userID = userID;
     }
 
 
@@ -69,9 +70,10 @@ public class GcmShowFriendsAsyncTask extends AsyncTask<Context, Void, String> {
 
         String msg = "";
         try {
-            CollectionResponseUserRecord usersCollection = regService.listFriends(id).execute();
-            users = (ArrayList)usersCollection.getItems();
+            UserRecord user = regService.listFriends(userID).execute();
+            friends = user.getFriends().split(" ");
 
+            Log.d("MOstrando", "puta basura");
         } catch (IOException ex) {
             ex.printStackTrace();
             msg = "Error: " + ex.getMessage();
@@ -85,9 +87,12 @@ public class GcmShowFriendsAsyncTask extends AsyncTask<Context, Void, String> {
         if (pDialog.isShowing())
             pDialog.dismiss();
 
-        if(users != null) {
-            ShowFriendsFragment.ListUsers(users);
+        if( friends!= null){
+            ArrayList<String> users = new ArrayList<String>(Arrays.asList(friends));
+            ShowFriendsFragment.ListUsers( users);
         }
+
+        regService = null;
 
 
     }

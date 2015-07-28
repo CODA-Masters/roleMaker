@@ -3,15 +3,10 @@ package gcm.backend.model;
 /**
  * Created by Juan on 26/07/2015.
  */
+
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
-import com.googlecode.objectify.annotation.Serialize;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.inject.Named;
 
 /**
  * The Objectify object model for device registrations we are persisting
@@ -19,6 +14,7 @@ import javax.inject.Named;
 @Entity
 public class UserRecord {
 
+    @Index
     @Id
     Long id;
 
@@ -33,8 +29,7 @@ public class UserRecord {
     private String email;
     private String password;
 
-    @Serialize
-    private ArrayList<String> friends;
+    private String friends;
 
     public UserRecord() {
     }
@@ -75,15 +70,17 @@ public class UserRecord {
         this.regId = regId;
     }
 
-    public ArrayList<String> getFriends() {
+    public String getFriends() {
         return friends;
     }
 
-    public void addFriend(String friend) {
-        this.friends.add(friend);
+    public void setFriends(String friends) {
+        this.friends = friends;
     }
 
-    public void removeFriend(String friend) {
-        this.friends.remove(friend);
+    public void setId(Long id) {
+        this.id = id;
     }
+
+
 }

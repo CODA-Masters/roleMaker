@@ -81,11 +81,14 @@ public class GcmShowUsersAsyncTask extends AsyncTask<Context, Void, String> {
 
     @Override
     protected void onPostExecute(String msg) {
+        super.onPostExecute(msg);
 
         if (pDialog.isShowing())
             pDialog.dismiss();
 
         ShowUsersFragment.ListUsers(users);
+
+
 
 
     }

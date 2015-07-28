@@ -6,10 +6,18 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import com.codamasters.rolemaker.R;
+import com.codamasters.rolemaker.controller.GcmAddFriendAsyncTask;
+
+import java.util.ArrayList;
+
+import gcm.backend.registration.model.UserRecord;
 
 
 public class LoggedActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -23,6 +31,7 @@ public class LoggedActivity extends ActionBarActivity implements NavigationDrawe
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +87,21 @@ public class LoggedActivity extends ActionBarActivity implements NavigationDrawe
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setTitle(mTitle);
+    }
+
+    public void addFriend(View view){
+        String friendID = "";
+        String friendName = ((TextView) this.findViewById(R.id.user_item)).getText().toString();
+        Log.d("COLEGA", friendName);
+
+        ArrayList<UserRecord> userList = ShowUsersFragment.getUserList();
+        for(UserRecord user: userList){
+            if(user.getName() == friendName){
+                friendID = user.getId().toString();
+                Log.d("COLEGA ID", friendID);
+                new GcmAddFriendAsyncTask(this,friendID).execute();
+            }
+        }
     }
 
 
