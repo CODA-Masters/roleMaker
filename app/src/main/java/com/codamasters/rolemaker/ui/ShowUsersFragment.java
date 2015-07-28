@@ -90,6 +90,10 @@ public class ShowUsersFragment extends Fragment {
         return userList;
     }
 
+
+    /**
+     * @author Alexito
+     */
     public class PostAdapter extends BaseAdapter {
 
         class ViewHolder {
