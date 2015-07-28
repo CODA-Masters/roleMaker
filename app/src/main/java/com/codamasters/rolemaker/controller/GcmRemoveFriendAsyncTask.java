@@ -53,6 +53,8 @@ public class GcmRemoveFriendAsyncTask extends AsyncTask<Context, Void, String> {
         try {
             String removeUserID = PreferenceManager.getDefaultSharedPreferences(context).getString("user", "nothing");
 
+            Log.d("Colega a borrar:", removeFriendID);
+
             regService.removeFriend(removeUserID, removeFriendID).execute();
 
         } catch (IOException ex) {

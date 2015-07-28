@@ -3,7 +3,6 @@ package com.codamasters.rolemaker.controller;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.codamasters.rolemaker.ui.ShowFriendsFragment;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -29,6 +28,8 @@ public class GcmShowFriendsAsyncTask extends AsyncTask<Context, Void, String> {
     private ProgressDialog pDialog;
     private String userID;
     private  ArrayList<String> friendNames;
+    private  ArrayList<String> friendIDs;
+
 
     // TODO: change to your own sender ID to Google Developers Console project number, as per instructions above
     private static final String SENDER_ID = "294669629340";
@@ -74,6 +75,7 @@ public class GcmShowFriendsAsyncTask extends AsyncTask<Context, Void, String> {
         try {
             UserRecord user = regService.listFriends(userID).execute();
             friendNames = new ArrayList();
+            friendIDs = new ArrayList<>();
             JSONParser parser=new JSONParser();
             String s = user.getFriends();
             try {
@@ -85,6 +87,7 @@ public class GcmShowFriendsAsyncTask extends AsyncTask<Context, Void, String> {
                     id = Long.parseLong((String) array.get(i));
                     friend = regService.findRecord(id).execute();
                     friendNames.add(friend.getName());
+                    friendIDs.add(friend.getId().toString());
                 }
             } catch (org.json.simple.parser.ParseException e) {
                 e.printStackTrace();
@@ -104,7 +107,7 @@ public class GcmShowFriendsAsyncTask extends AsyncTask<Context, Void, String> {
             pDialog.dismiss();
 
         if( friendNames!= null && friendNames.size() > 0){
-            ShowFriendsFragment.ListUsers(friendNames);
+            ShowFriendsFragment.ListUsers(friendNames, friendIDs);
         }
 
         regService = null;

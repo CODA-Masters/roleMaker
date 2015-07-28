@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -21,8 +20,6 @@ import com.codamasters.rolemaker.controller.GcmShowFriendsAsyncTask;
 
 import java.util.ArrayList;
 
-import gcm.backend.registration.model.UserRecord;
-
 /**
  * Created by Julio on 27/07/2015.
  */
@@ -33,6 +30,8 @@ public class ShowFriendsFragment extends Fragment {
     // Hashmap for ListView
     private LinearLayout listContainer;
     private static ArrayList<String> resultList;
+    private static ArrayList<String> friendsIdsList;
+
 
     private static PostAdapter adapter;
     private ListView friendsListView;
@@ -75,11 +74,19 @@ public class ShowFriendsFragment extends Fragment {
         return rootView;
     }
 
-    public static void ListUsers(ArrayList<String> users){
+    public static void ListUsers(ArrayList<String> users, ArrayList<String> friendsIDs){
 
         resultList = users;
+        friendsIdsList = friendsIDs;
         adapter.notifyDataSetChanged();
     }
+
+    private void updateFriends(String friendName, String friendID){
+        resultList.remove(friendName);
+        friendsIdsList.remove(friendID);
+        adapter.notifyDataSetChanged();
+    }
+
 
     // Adaptador de la lista
     public class PostAdapter extends BaseAdapter {
@@ -150,8 +157,9 @@ public class ShowFriendsFragment extends Fragment {
             holder.removeFriend.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String friendID = resultList.get(position);
+                    String friendID = friendsIdsList.get(position);
                     new GcmRemoveFriendAsyncTask(getActivity(), friendID).execute();
+                    updateFriends(resultList.get(position), friendID);
                 }
             });
 

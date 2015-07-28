@@ -12,10 +12,8 @@ import com.google.api.server.spi.config.ApiNamespace;
 import com.google.api.server.spi.response.CollectionResponse;
 
 import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import java.text.ParseException;
 import java.util.List;
 import java.util.logging.Logger;
 
