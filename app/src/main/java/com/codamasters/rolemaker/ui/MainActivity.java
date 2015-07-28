@@ -4,6 +4,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -20,6 +21,9 @@ public class MainActivity extends Activity implements OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(PreferenceManager.getDefaultSharedPreferences(this).getString("user", "nothing") != "nothing"){
+            startActivity(new Intent(this,LoggedActivity.class));
+        }
         setContentView(R.layout.activity_main);
 
         btnSignIn = (Button) findViewById(R.id.btnSingIn);

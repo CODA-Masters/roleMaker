@@ -103,8 +103,7 @@ public class GcmShowFriendsAsyncTask extends AsyncTask<Context, Void, String> {
         if (pDialog.isShowing())
             pDialog.dismiss();
 
-        if( friendNames!= null){
-            Log.d("MI PRIMER AMIGOOOO!",friendNames.get(0));
+        if( friendNames!= null && friendNames.size() > 0){
             ShowFriendsFragment.ListUsers(friendNames);
         }
 

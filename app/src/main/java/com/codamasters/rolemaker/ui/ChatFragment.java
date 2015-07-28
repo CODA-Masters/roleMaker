@@ -64,7 +64,6 @@ public class ChatFragment extends Fragment {
         //      load tasks from preference
         prefs = getActivity().getSharedPreferences("SHARED_MESSAGES", Context.MODE_PRIVATE);
 
-
         try {
             resultList = (ArrayList<String>) ObjectSerializer.deserialize(prefs.getString("messages", ObjectSerializer.serialize(new ArrayList<String>())));
         } catch (IOException e) {
