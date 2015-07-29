@@ -10,6 +10,8 @@ import android.widget.TextView;
 import com.codamasters.rolemaker.controller.GcmRegistrationAsyncTask;
 import com.codamasters.rolemaker.R;
 
+import java.util.concurrent.ExecutionException;
+
 
 public class RegisterActivity extends ActionBarActivity {
 
@@ -38,7 +40,16 @@ public class RegisterActivity extends ActionBarActivity {
         tv = (TextView) findViewById(R.id.regPassword);
         String regPassword = tv.getText().toString();
 
-        new GcmRegistrationAsyncTask(this, regName,  regEmail, regPassword).execute();
+        try {
+            String msg=new GcmRegistrationAsyncTask(this, regName,  regEmail, regPassword).execute().get();
+            if(msg!=null)
+                finish();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
     }
 
 

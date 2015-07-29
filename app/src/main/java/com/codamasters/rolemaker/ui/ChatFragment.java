@@ -16,13 +16,16 @@ import android.widget.TextView;
 
 import com.codamasters.rolemaker.R;
 import com.codamasters.rolemaker.controller.GcmMessageAsyncTask;
+import com.codamasters.rolemaker.utils.MensajeChat;
 import com.codamasters.rolemaker.utils.ObjectSerializer;
+import com.codamasters.rolemaker.utils.Parseador;
 
 import org.json.JSONException;
 import org.json.simple.JSONObject;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -35,6 +38,7 @@ public class ChatFragment extends Fragment {
 
     // Hashmap for ListView
     private static ArrayList<String> resultList;
+    private static ArrayList<MensajeChat> listaMensajes;
     private static PostAdapter adapter;
     private ListView lv;
     private Button bSend;
@@ -69,13 +73,14 @@ public class ChatFragment extends Fragment {
         prefs = getActivity().getSharedPreferences("SHARED_MESSAGES", Context.MODE_PRIVATE);
 
         resultList = new ArrayList<String>();
+        listaMensajes = new ArrayList<>();
 
         try {
             resultList = (ArrayList<String>) ObjectSerializer.deserialize(prefs.getString("messages", ObjectSerializer.serialize(new ArrayList<String>())));
+            listaMensajes = Parseador.parsearListaMensajes(resultList);
         } catch (IOException e) {
 
             e.printStackTrace();
-            Log.d("problemo", "iosepsion");
         }
 
         tv = (TextView) rootView.findViewById(R.id.textMessage);
@@ -107,22 +112,28 @@ public class ChatFragment extends Fragment {
         String message = tv.getText().toString();
         String username = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("username", "nothing");
 
+        String DATE_FORMAT_NOW = "HH:mm:ss dd/mm/yyy";
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
+        String stringDate = sdf.format(date );
+
+
         JSONObject jsonObj = new JSONObject();
         jsonObj.put("message",message);
         jsonObj.put("username", username);
-        jsonObj.put("date",new Date());
+        jsonObj.put("date",stringDate.toString());
         StringWriter out = new StringWriter();
         jsonObj.writeJSONString(out);
         String jsonText = out.toString();
 
         new GcmMessageAsyncTask(getActivity(), jsonText).execute();
-
+        tv.setText("");
     }
 
     public static void updateMessages(String message) {
 
         resultList.add(message);
-     //   adapter.add(message);
+        listaMensajes.add(Parseador.parsearMensaje(message));
         adapter.notifyDataSetChanged();
 
     }
@@ -153,11 +164,12 @@ public class ChatFragment extends Fragment {
 
         try {
             resultList = (ArrayList<String>) ObjectSerializer.deserialize(prefs.getString("messages", ObjectSerializer.serialize(new ArrayList<String>())));
+            listaMensajes = Parseador.parsearListaMensajes(resultList);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        //adapter.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();
         open=true;
 
     }
@@ -171,7 +183,7 @@ public class ChatFragment extends Fragment {
     public class PostAdapter extends BaseAdapter {
 
         class ViewHolder {
-            TextView message;
+            TextView message,fecha,usuario;
         }
 
         private static final String TAG = "CustomAdapter";
@@ -211,27 +223,38 @@ public class ChatFragment extends Fragment {
         public View getView(final int position, View convertView, ViewGroup parent) {
 
             ViewHolder holder;
-
+            MensajeChat mc= listaMensajes.get(position);
             Log.v(TAG, "in getView for position " + position + ", convertView is "
                     + ((convertView == null) ? "null" : "being recycled"));
-
+            String username = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("username", "nothing");
             if (convertView == null) {
-                convertView = inflater.inflate(R.layout.list_item, null);
+                if(!username.equals(mc.getUser()))
+                    convertView = inflater.inflate(R.layout.list_item, null);
+                else
+                    convertView = inflater.inflate(R.layout.list_item_me, null);
 
                 holder = new ViewHolder();
 
                 holder.message = (TextView) convertView
                         .findViewById(R.id.content);
+                holder.fecha = (TextView) convertView
+                        .findViewById(R.id.tvFecha);
+                holder.usuario = (TextView) convertView
+                        .findViewById(R.id.tvUser);
 
                 convertView.setTag(holder);
 
             } else
                 holder = (ViewHolder) convertView.getTag();
-
             // Setting all values in listview
-            Log.d("poblemo",resultList.size()+"");
-            holder.message.setText(resultList.get(position));
+            holder.message.setText(mc.getMensaje());
+            if(!username.equals(mc.getUser()))
+                holder.usuario.setText(mc.getUser());
 
+            Date date = mc.getFecha();
+            String DATE_FORMAT_NOW = "HH:mm:ss dd/mm/yyy";
+            SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
+            holder.fecha.setText(sdf.format(date).toString());
 
             return convertView;
         }

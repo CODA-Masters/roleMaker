@@ -49,7 +49,7 @@ public class GcmRegistrationAsyncTask extends AsyncTask<Context, Void, String> {
             regService = builder.build();
         }
 
-        String msg = "";
+        String msg;
         try {
             if (gcm == null) {
                 gcm = GoogleCloudMessaging.getInstance(context);
@@ -58,7 +58,6 @@ public class GcmRegistrationAsyncTask extends AsyncTask<Context, Void, String> {
 
             String regId = gcm.register(SENDER_ID);
             msg = "Usuario '" + regName + "' registrado con éxito.";
-
 
             // You should send the registration ID to your server over HTTP,
             // so it can use GCM/HTTP or CCS to send messages to your app.
@@ -77,5 +76,6 @@ public class GcmRegistrationAsyncTask extends AsyncTask<Context, Void, String> {
     @Override
     protected void onPostExecute(String msg) {
         Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+
     }
 }
