@@ -17,7 +17,6 @@ public class Partida {
     @Index
     private String nombre;
 
-
     @Index
     private String idMaster;
     private String idJugadores;//Array de idesssss
