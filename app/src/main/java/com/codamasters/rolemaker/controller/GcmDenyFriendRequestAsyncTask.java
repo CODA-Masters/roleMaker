@@ -16,7 +16,7 @@ import gcm.backend.registration.Registration;
 /**
  * Created by Julio on 27/07/2015.
  */
-public class GcmAddFriendAsyncTask extends AsyncTask<Context, Void, String> {
+public class GcmDenyFriendRequestAsyncTask extends AsyncTask<Context, Void, String> {
     private static Registration regService = null;
     private Context context;
     private String addFriendID;
@@ -25,7 +25,7 @@ public class GcmAddFriendAsyncTask extends AsyncTask<Context, Void, String> {
     // TODO: change to your own sender ID to Google Developers Console project number, as per instructions above
     private static final String SENDER_ID = "294669629340";
 
-    public GcmAddFriendAsyncTask(Context context, String addFriendID) {
+    public GcmDenyFriendRequestAsyncTask(Context context, String addFriendID) {
         this.context = context;
         this.addFriendID = addFriendID;
     }
@@ -36,7 +36,7 @@ public class GcmAddFriendAsyncTask extends AsyncTask<Context, Void, String> {
         super.onPreExecute();
         // Showing progress dialog
         pDialog = new ProgressDialog(context);
-        pDialog.setMessage("Sending friend request");
+        pDialog.setMessage("Denying friend request");
         pDialog.setCancelable(false);
         pDialog.show();
     }
@@ -53,7 +53,7 @@ public class GcmAddFriendAsyncTask extends AsyncTask<Context, Void, String> {
         try {
             String addUserID = PreferenceManager.getDefaultSharedPreferences(context).getString("user", "nothing");
 
-            regService.sendFriendRequest(addUserID, addFriendID).execute();
+            regService.denyFriendRequest(addUserID, addFriendID).execute();
 
         } catch (IOException ex) {
             ex.printStackTrace();

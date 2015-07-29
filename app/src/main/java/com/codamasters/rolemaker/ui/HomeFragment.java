@@ -24,7 +24,7 @@ public class HomeFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_SECTION_NUMBER = "section_number";
 
-    Button bOpenChat,bShowUsers,bShowFriends;
+    Button bOpenChat,bShowUsers,bShowFriends, bShowRequests;
 
 
     private OnFragmentInteractionListener mListener;
@@ -69,6 +69,13 @@ public class HomeFragment extends Fragment {
                 .commit();
     }
 
+    public void showRequests (View view){
+        getFragmentManager().beginTransaction()
+                .addToBackStack("")
+                .replace(R.id.container,ShowFriendRequestsFragment.newInstance(""))
+                .commit();
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,6 +88,7 @@ public class HomeFragment extends Fragment {
         bOpenChat=(Button) rootView.findViewById(R.id.bOpenChat);
         bShowUsers=(Button) rootView.findViewById(R.id.bShowUsers);
         bShowFriends=(Button) rootView.findViewById(R.id.bShowFriends);
+        bShowRequests=(Button) rootView.findViewById(R.id.bShowRequests);
         setListeners();
         return rootView;
     }
@@ -102,6 +110,12 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 showUsers(v);
+            }
+        });
+        bShowRequests.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showRequests(v);
             }
         });
     }

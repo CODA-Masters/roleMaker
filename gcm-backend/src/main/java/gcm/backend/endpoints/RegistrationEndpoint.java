@@ -106,37 +106,105 @@ public class RegistrationEndpoint {
 
         UserRecord user = findRecord(Long.parseLong(addUserID));
         UserRecord friend = findRecord(Long.parseLong(addFriendID));
+        boolean mutualRequest = false;
 
         JSONParser parser=new JSONParser();
         String s;
         if(user != null && friend != null) {
-            s = user.getFriendRequestsSent();
+            s = friend.getFriendRequestsSent();
             try {
                 Object obj = parser.parse(s);
                 JSONArray array = (JSONArray) obj;
-                array.add(addFriendID);
-                s = array.toJSONString();
+                for (int i = 0; i < array.size(); i++){
+                    if(array.get(i) == addUserID) {
+                        mutualRequest = true;
+                        break;
+                    }
+                }
             } catch (org.json.simple.parser.ParseException e) {
                 e.printStackTrace();
             }
 
-            user.setFriendRequestsSent(s);
-            ofy().save().entity(user).now();
+            // Si no se produce una petición mutua se manda una petición y el otro la recibe
+            if(!mutualRequest) {
+                user.setFriendRequestsSent(s);
+                ofy().save().entity(user).now();
+
+                parser = new JSONParser();
+                s = user.getFriendRequestsSent();
+                try {
+                    Object obj = parser.parse(s);
+                    JSONArray array = (JSONArray) obj;
+                    array.add(addFriendID);
+                    s = array.toJSONString();
+                } catch (org.json.simple.parser.ParseException e) {
+                    e.printStackTrace();
+                }
+
+                user.setFriendRequestsSent(s);
+                ofy().save().entity(user).now();
 
 
-            parser=new JSONParser();
-            s = friend.getFriendRequestsReceived();
-            try {
-                Object obj = parser.parse(s);
-                JSONArray array = (JSONArray) obj;
-                array.add(addUserID);
-                s = array.toJSONString();
-            } catch (org.json.simple.parser.ParseException e) {
-                e.printStackTrace();
+                parser = new JSONParser();
+                s = friend.getFriendRequestsReceived();
+                try {
+                    Object obj = parser.parse(s);
+                    JSONArray array = (JSONArray) obj;
+                    array.add(addUserID);
+                    s = array.toJSONString();
+                } catch (org.json.simple.parser.ParseException e) {
+                    e.printStackTrace();
+                }
+                friend.setFriendRequestsReceived(s);
+
+                ofy().save().entity(friend).now();
             }
-            friend.setFriendRequestsReceived(s);
+            // Si el otro ya había mandado una petición se debería borrar la petición  en ambas entidades y
+            // añadirse como amigos mutuamente
+            else{
+                user.setFriendRequestsReceived(s);
 
-            ofy().save().entity(friend).now();
+                s = user.getFriends();
+                try {
+                    Object obj = parser.parse(s);
+                    JSONArray array = (JSONArray) obj;
+                    array.add(addFriendID);
+                    s = array.toJSONString();
+                } catch (org.json.simple.parser.ParseException e) {
+                    e.printStackTrace();
+                }
+
+                user.setFriends(s);
+
+                ofy().save().entity(user).now();
+
+
+                parser=new JSONParser();
+
+                s = friend.getFriendRequestsSent();
+                try {
+                    Object obj = parser.parse(s);
+                    JSONArray array = (JSONArray) obj;
+                    array.remove(addUserID);
+                    s = array.toJSONString();
+                } catch (org.json.simple.parser.ParseException e) {
+                    e.printStackTrace();
+                }
+                friend.setFriendRequestsSent(s);
+
+                s = friend.getFriends();
+                try {
+                    Object obj = parser.parse(s);
+                    JSONArray array = (JSONArray) obj;
+                    array.add(addUserID);
+                    s = array.toJSONString();
+                } catch (org.json.simple.parser.ParseException e) {
+                    e.printStackTrace();
+                }
+                friend.setFriends(s);
+
+                ofy().save().entity(friend).now();
+            }
         }
 
     }
@@ -150,7 +218,7 @@ public class RegistrationEndpoint {
         JSONParser parser=new JSONParser();
         String s;
         if(user != null && friend != null) {
-            s = user.getFriendRequestsSent();
+            s = user.getFriendRequestsReceived();
             try {
                 Object obj = parser.parse(s);
                 JSONArray array = (JSONArray) obj;
@@ -160,7 +228,7 @@ public class RegistrationEndpoint {
                 e.printStackTrace();
             }
 
-            user.setFriendRequestsSent(s);
+            user.setFriendRequestsReceived(s);
 
             s = user.getFriends();
             try {
@@ -179,7 +247,7 @@ public class RegistrationEndpoint {
 
             parser=new JSONParser();
 
-            s = friend.getFriendRequestsReceived();
+            s = friend.getFriendRequestsSent();
             try {
                 Object obj = parser.parse(s);
                 JSONArray array = (JSONArray) obj;
@@ -188,7 +256,7 @@ public class RegistrationEndpoint {
             } catch (org.json.simple.parser.ParseException e) {
                 e.printStackTrace();
             }
-            friend.setFriendRequestsReceived(s);
+            friend.setFriendRequestsSent(s);
 
             s = friend.getFriends();
             try {
