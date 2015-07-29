@@ -3,6 +3,7 @@ package com.codamasters.rolemaker.ui;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,9 +17,19 @@ import android.widget.TextView;
 import com.codamasters.rolemaker.R;
 import com.codamasters.rolemaker.controller.GcmMessageAsyncTask;
 import com.codamasters.rolemaker.utils.ObjectSerializer;
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.extensions.android.json.AndroidJsonFactory;
+
+import org.json.JSONException;
+import org.json.simple.JSONObject;
 
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Date;
+
+import gcm.backend.registration.Registration;
+import gcm.backend.registration.model.UserRecord;
 
 /**
  * Created by Juan on 26/07/2015.
@@ -76,7 +87,13 @@ public class ChatFragment extends Fragment {
         bSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendButton(v);
+                try {
+                    sendButton(v);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -88,10 +105,19 @@ public class ChatFragment extends Fragment {
         return rootView;
     }
 
-    public void sendButton (View view){
+    public void sendButton (View view) throws JSONException, IOException {
         String message = tv.getText().toString();
+        String username = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("username", "nothing");
 
-        new GcmMessageAsyncTask(getActivity(), message).execute();
+        JSONObject jsonObj = new JSONObject();
+        jsonObj.put("message",message);
+        jsonObj.put("username", username);
+        jsonObj.put("date",new Date());
+        StringWriter out = new StringWriter();
+        jsonObj.writeJSONString(out);
+        String jsonText = out.toString();
+
+        new GcmMessageAsyncTask(getActivity(), jsonText).execute();
 
     }
 

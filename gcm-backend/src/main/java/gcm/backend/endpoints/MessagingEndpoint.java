@@ -13,7 +13,13 @@ import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 import java.io.IOException;
+import java.io.StringWriter;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -49,7 +55,7 @@ public class MessagingEndpoint {
      */
 
     @ApiMethod(name = "sendText")
-    public void sendText(@Named("message") String message) throws IOException {
+    public void sendText(@Named("message") String message) throws IOException, ParseException {
         if (message == null || message.trim().length() == 0) {
             log.warning("Not sending message because it is empty");
             return;
@@ -70,6 +76,10 @@ public class MessagingEndpoint {
 
             Result result = sender.send(msg, record.getRegId(), 1);
         }
+    }
+
+    private UserRecord findRecord(Long id) {
+        return ofy().load().type(UserRecord.class).filter("id", id).first().now();
     }
 
 
