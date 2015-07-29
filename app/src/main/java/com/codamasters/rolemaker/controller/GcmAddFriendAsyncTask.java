@@ -55,7 +55,7 @@ public class GcmAddFriendAsyncTask extends AsyncTask<Context, Void, String> {
 
             Log.d("Agregador", addUserID);
             Log.d("Agregado", addFriendID);
-            regService.addFriend(addUserID, addFriendID).execute();
+            regService.sendFriendRequest(addUserID, addFriendID).execute();
 
         } catch (IOException ex) {
             ex.printStackTrace();

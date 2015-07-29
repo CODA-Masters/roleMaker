@@ -57,6 +57,8 @@ public class RegistrationEndpoint {
         record.setEmail(regEmail);
         record.setPassword(regPassword);
         record.setFriends("[]");
+        record.setFriendRequestsSent("[]");
+        record.setFriendRequestsReceived("[]");
         ofy().save().entity(record).now();
 
     }
@@ -99,25 +101,147 @@ public class RegistrationEndpoint {
 
     }
 
-    @ApiMethod(name = "addFriend")
-    public void addFriend(@Named("addUserID") String addUserID, @Named("addFriendID") String addFriendID){
+    @ApiMethod(name = "sendFriendRequest")
+    public void sendFriendRequest(@Named("addUserID") String addUserID, @Named("addFriendID") String addFriendID){
 
         UserRecord user = findRecord(Long.parseLong(addUserID));
+        UserRecord friend = findRecord(Long.parseLong(addFriendID));
 
         JSONParser parser=new JSONParser();
-        String s = user.getFriends();
-        try {
-            Object obj = parser.parse(s);
-            JSONArray array = (JSONArray) obj;
-            array.add(addFriendID);
-            s = array.toJSONString();
-         } catch (org.json.simple.parser.ParseException e) {
-            e.printStackTrace();
-        }
-        user.setFriends(s);
+        String s;
+        if(user != null && friend != null) {
+            s = user.getFriendRequestsSent();
+            try {
+                Object obj = parser.parse(s);
+                JSONArray array = (JSONArray) obj;
+                array.add(addFriendID);
+                s = array.toJSONString();
+            } catch (org.json.simple.parser.ParseException e) {
+                e.printStackTrace();
+            }
 
-        if(user != null) {
+            user.setFriendRequestsSent(s);
             ofy().save().entity(user).now();
+
+
+            parser=new JSONParser();
+            s = friend.getFriendRequestsReceived();
+            try {
+                Object obj = parser.parse(s);
+                JSONArray array = (JSONArray) obj;
+                array.add(addUserID);
+                s = array.toJSONString();
+            } catch (org.json.simple.parser.ParseException e) {
+                e.printStackTrace();
+            }
+            friend.setFriendRequestsReceived(s);
+
+            ofy().save().entity(friend).now();
+        }
+
+    }
+
+    @ApiMethod(name = "acceptFriendRequest")
+    public void acceptFriendRequest(@Named("addUserID") String addUserID, @Named("addFriendID") String addFriendID){
+
+        UserRecord user = findRecord(Long.parseLong(addUserID));
+        UserRecord friend = findRecord(Long.parseLong(addFriendID));
+
+        JSONParser parser=new JSONParser();
+        String s;
+        if(user != null && friend != null) {
+            s = user.getFriendRequestsSent();
+            try {
+                Object obj = parser.parse(s);
+                JSONArray array = (JSONArray) obj;
+                array.remove(addFriendID);
+                s = array.toJSONString();
+            } catch (org.json.simple.parser.ParseException e) {
+                e.printStackTrace();
+            }
+
+            user.setFriendRequestsSent(s);
+
+            s = user.getFriends();
+            try {
+                Object obj = parser.parse(s);
+                JSONArray array = (JSONArray) obj;
+                array.add(addFriendID);
+                s = array.toJSONString();
+            } catch (org.json.simple.parser.ParseException e) {
+                e.printStackTrace();
+            }
+
+            user.setFriends(s);
+
+            ofy().save().entity(user).now();
+
+
+            parser=new JSONParser();
+
+            s = friend.getFriendRequestsReceived();
+            try {
+                Object obj = parser.parse(s);
+                JSONArray array = (JSONArray) obj;
+                array.remove(addUserID);
+                s = array.toJSONString();
+            } catch (org.json.simple.parser.ParseException e) {
+                e.printStackTrace();
+            }
+            friend.setFriendRequestsReceived(s);
+
+            s = friend.getFriends();
+            try {
+                Object obj = parser.parse(s);
+                JSONArray array = (JSONArray) obj;
+                array.add(addUserID);
+                s = array.toJSONString();
+            } catch (org.json.simple.parser.ParseException e) {
+                e.printStackTrace();
+            }
+            friend.setFriends(s);
+
+            ofy().save().entity(friend).now();
+        }
+
+    }
+
+    @ApiMethod(name = "denyFriendRequest")
+    public void denyFriendRequest(@Named("addUserID") String addUserID, @Named("addFriendID") String addFriendID){
+
+        UserRecord user = findRecord(Long.parseLong(addUserID));
+        UserRecord friend = findRecord(Long.parseLong(addFriendID));
+
+        JSONParser parser=new JSONParser();
+        String s;
+        if(user != null && friend != null) {
+            s = user.getFriendRequestsReceived();
+            try {
+                Object obj = parser.parse(s);
+                JSONArray array = (JSONArray) obj;
+                array.remove(addFriendID);
+                s = array.toJSONString();
+            } catch (org.json.simple.parser.ParseException e) {
+                e.printStackTrace();
+            }
+
+            user.setFriendRequestsReceived(s);
+            ofy().save().entity(user).now();
+
+
+            parser=new JSONParser();
+            s = friend.getFriendRequestsSent();
+            try {
+                Object obj = parser.parse(s);
+                JSONArray array = (JSONArray) obj;
+                array.remove(addUserID);
+                s = array.toJSONString();
+            } catch (org.json.simple.parser.ParseException e) {
+                e.printStackTrace();
+            }
+            friend.setFriendRequestsSent(s);
+
+            ofy().save().entity(friend).now();
         }
 
     }
@@ -125,6 +249,7 @@ public class RegistrationEndpoint {
     @ApiMethod(name = "removeFriend")
     public void removeFriend(@Named("removeUserID") String userID, @Named("removeFriendID") String friendID){
         UserRecord user = findRecord(Long.parseLong(userID));
+        UserRecord friend = findRecord(Long.parseLong(friendID));
 
         JSONParser parser=new JSONParser();
         String s = user.getFriends();
@@ -140,6 +265,22 @@ public class RegistrationEndpoint {
 
         if(user != null) {
             ofy().save().entity(user).now();
+        }
+
+        parser=new JSONParser();
+        s = friend.getFriends();
+        try {
+            Object obj = parser.parse(s);
+            JSONArray array = (JSONArray) obj;
+            array.remove(userID);
+            s = array.toJSONString();
+        } catch (org.json.simple.parser.ParseException e) {
+            e.printStackTrace();
+        }
+        friend.setFriends(s);
+
+        if(user != null) {
+            ofy().save().entity(friend).now();
         }
 
     }
