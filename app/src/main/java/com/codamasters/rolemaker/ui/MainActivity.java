@@ -33,8 +33,8 @@ public class MainActivity extends Activity implements OnClickListener {
         btnSignUp.setOnClickListener(this);
 
         TextView tv = (TextView) findViewById(R.id.titleLogin);
-        Typeface face = Typeface.createFromAsset(getAssets(), "fonts/arcader.TTF");
-        tv.setTypeface(face);
+        //Typeface face = Typeface.createFromAsset(getAssets(), "fonts/arcader.TTF");
+        //tv.setTypeface(face);
     }
 
     @Override

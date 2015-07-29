@@ -62,6 +62,7 @@ public class GcmLoginAsyncTask extends AsyncTask<Context, Void, String> {
             if(user != null){
                 Intent i = new Intent(this.context, LoggedActivity.class);
                 PreferenceManager.getDefaultSharedPreferences(context).edit().putString("user", user.getId().toString()).commit();
+                PreferenceManager.getDefaultSharedPreferences(context).edit().putString("username", user.getName().toString()).commit();
 
                 // Actualizar id de GCM
                 if (gcm == null) {

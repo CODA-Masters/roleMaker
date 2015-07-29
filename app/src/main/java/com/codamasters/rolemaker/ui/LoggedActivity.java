@@ -55,7 +55,13 @@ public class LoggedActivity extends ActionBarActivity implements NavigationDrawe
         Fragment frag=null;
         switch (position){
             case 1:frag=HomeFragment.newInstance(position);break;
-            case 3:finish(); PreferenceManager.getDefaultSharedPreferences(this).edit().putString("user", "nothing").commit(); break;
+
+            // Desconexión
+            case 3:
+                finish();
+                PreferenceManager.getDefaultSharedPreferences(this).edit().putString("user", "nothing").commit();
+                PreferenceManager.getDefaultSharedPreferences(this).edit().putString("username", "nothing").commit();
+                break;
             default:frag=HomeFragment.newInstance(position);
         }
         if(position!=3) {
@@ -88,22 +94,6 @@ public class LoggedActivity extends ActionBarActivity implements NavigationDrawe
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setTitle(mTitle);
-    }
-
-    public void addFriend(View view){
-
-        String friendID = "";
-        String friendName = ((TextView) this.findViewById(R.id.user_item)).getText().toString();
-        Log.d("COLEGA", friendName);
-
-        ArrayList<UserRecord> userList = ShowUsersFragment.getUserList();
-        for(UserRecord user: userList){
-            if(user.getName() == friendName){
-                friendID = user.getId().toString();
-                Log.d("COLEGA ID", friendID);
-                new GcmAddFriendAsyncTask(this,friendID).execute();
-            }
-        }
     }
 
 
