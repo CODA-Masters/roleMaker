@@ -77,7 +77,7 @@ public class ChatFragment extends Fragment {
 
         try {
             resultList = (ArrayList<String>) ObjectSerializer.deserialize(prefs.getString("messages", ObjectSerializer.serialize(new ArrayList<String>())));
-            if(resultList.get(0)!=null)
+            if(resultList.size()<0)
                 listaMensajes = Parseador.parsearListaMensajes(resultList);
         } catch (IOException e) {
 
@@ -165,7 +165,7 @@ public class ChatFragment extends Fragment {
 
         try {
             resultList = (ArrayList<String>) ObjectSerializer.deserialize(prefs.getString("messages", ObjectSerializer.serialize(new ArrayList<String>())));
-            if(resultList.get(0)!=null)
+            if(resultList.size()<0)
                 listaMensajes = Parseador.parsearListaMensajes(resultList);
         } catch (IOException e) {
             e.printStackTrace();
@@ -226,14 +226,12 @@ public class ChatFragment extends Fragment {
 
             ViewHolder holder;
             MensajeChat mc= listaMensajes.get(position);
-            Log.v(TAG, "in getView for position " + position + ", convertView is "
-                    + ((convertView == null) ? "null" : "being recycled"));
+            
             String username = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("username", "nothing");
-            if (convertView == null) {
-                if(!username.equals(mc.getUser()))
-                    convertView = inflater.inflate(R.layout.list_item, null);
-                else
+                if(username.equals(mc.getUser()))
                     convertView = inflater.inflate(R.layout.list_item_me, null);
+                else
+                    convertView = inflater.inflate(R.layout.list_item, null);
 
                 holder = new ViewHolder();
 
@@ -244,15 +242,13 @@ public class ChatFragment extends Fragment {
                 holder.usuario = (TextView) convertView
                         .findViewById(R.id.tvUser);
 
-                convertView.setTag(holder);
 
-            } else
-                holder = (ViewHolder) convertView.getTag();
             // Setting all values in listview
             holder.message.setText(mc.getMensaje());
             if(!username.equals(mc.getUser()))
                 holder.usuario.setText(mc.getUser());
-
+            else
+                holder.usuario.setText(getString(R.string.me));
             Date date = mc.getFecha();
             String DATE_FORMAT_NOW = "HH:mm:ss dd/mm/yyy";
             SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
