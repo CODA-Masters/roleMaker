@@ -77,7 +77,8 @@ public class ChatFragment extends Fragment {
 
         try {
             resultList = (ArrayList<String>) ObjectSerializer.deserialize(prefs.getString("messages", ObjectSerializer.serialize(new ArrayList<String>())));
-            listaMensajes = Parseador.parsearListaMensajes(resultList);
+            if(resultList.get(0)!=null)
+                listaMensajes = Parseador.parsearListaMensajes(resultList);
         } catch (IOException e) {
 
             e.printStackTrace();
@@ -164,7 +165,8 @@ public class ChatFragment extends Fragment {
 
         try {
             resultList = (ArrayList<String>) ObjectSerializer.deserialize(prefs.getString("messages", ObjectSerializer.serialize(new ArrayList<String>())));
-            listaMensajes = Parseador.parsearListaMensajes(resultList);
+            if(resultList.get(0)!=null)
+                listaMensajes = Parseador.parsearListaMensajes(resultList);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -199,13 +201,13 @@ public class ChatFragment extends Fragment {
         @Override
         public int getCount() {
             Log.v(TAG, "in getCount()");
-            return resultList.size();
+            return listaMensajes.size();
         }
 
         @Override
         public Object getItem(int position) {
             Log.v(TAG, "in getItem() for position " + position);
-            return resultList.get(position);
+            return listaMensajes.get(position);
         }
 
         @Override
