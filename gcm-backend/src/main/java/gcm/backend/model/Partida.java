@@ -15,13 +15,19 @@ public class Partida {
     Long id;
 
     @Index
-    private String nombre;
+    private String name; // Nombre de la partida
 
     @Index
-    private String idMaster;
-    private String idJugadores;//Array de idesssss
+    private String master; // ID del master
+    private String players; // Array de IDs de jugadores
+    private int numPlayers; // Número de ugadores actualmente en partida
+    private int maxPlayers; // Número máximo de jugadores permitidos
+    private String description; // Descripción de la partida
+    private String style; // Estilo de partida (A elegir para personalizar skins o cualquier otra cosa):
+                        // fantasía medieval, futurista, steampunk, realista)
+    private String playerAttributes; // Hashmap (diccionario) de atributos algo como Hashmap<String,Atributos>
+                                    // Representa los atributos que podrán tener los jugadores en esta partida.
 
-    private String atributosjugadores;//Hashmap de atributos algo como Hashmap<String,Atributos>
 
     public Partida() {
     }
@@ -34,35 +40,67 @@ public class Partida {
         this.id = id;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getName() {
+        return name;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getIdMaster() {
-        return idMaster;
+    public String getMaster() {
+        return master;
     }
 
-    public void setIdMaster(String idMaster) {
-        this.idMaster = idMaster;
+    public void setMaster(String master) {
+        this.master = master;
     }
 
-    public String getIdJugadores() {
-        return idJugadores;
+    public String getPlayers() {
+        return players;
     }
 
-    public void setIdJugadores(String idJugadores) {
-        this.idJugadores = idJugadores;
+    public void setPlayers(String players) {
+        this.players = players;
     }
 
-    public String getAtributosjugadores() {
-        return atributosjugadores;
+    public String getPlayerAttributes() {
+        return playerAttributes;
     }
 
-    public void setAtributosjugadores(String atributosjugadores) {
-        this.atributosjugadores = atributosjugadores;
+    public void setPlayerAttributes(String playerAttributes) {
+        this.playerAttributes = playerAttributes;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getStyle() {
+        return style;
+    }
+
+    public void setStyle(String style) {
+        this.style = style;
+    }
+
+    public int getNumPlayers() {
+        return numPlayers;
+    }
+
+    public void setNumPlayers(int numPlayers) {
+        this.numPlayers = numPlayers;
+    }
+
+    public int getMaxPlayers() {
+        return maxPlayers;
+    }
+
+    public void setMaxPlayers(int maxPlayers) {
+        this.maxPlayers = maxPlayers;
     }
 }

@@ -34,4 +34,10 @@
         android:text="show friend requests"
         android:id="@+id/bShowRequests" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="create game"
+        android:id="@+id/bCreateGame" />
+
 </LinearLayout>
