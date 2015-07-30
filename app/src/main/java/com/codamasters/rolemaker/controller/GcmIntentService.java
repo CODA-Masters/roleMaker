@@ -11,10 +11,14 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import com.codamasters.rolemaker.ui.ChatFragment;
+import com.codamasters.rolemaker.utils.MensajeChat;
 import com.codamasters.rolemaker.utils.ObjectSerializer;
+import com.codamasters.rolemaker.utils.Parseador;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -58,20 +62,16 @@ public class GcmIntentService extends IntentService {
 
                     SharedPreferences prefs = getSharedPreferences("SHARED_MESSAGES", Context.MODE_PRIVATE);
 
-                    try {
-                        ArrayList<String> resultList = (ArrayList<String>) ObjectSerializer.deserialize(prefs.getString("messages", ObjectSerializer.serialize(new ArrayList<String>())));
-                        resultList.add(message);
+                    Gson gson = new Gson();
 
-                        SharedPreferences.Editor editor = prefs.edit();
-                        try {
-                            editor.putString("messages", ObjectSerializer.serialize(resultList));
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        editor.commit();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    String json = prefs.getString("messages", "");
+                    ArrayList<MensajeChat> resultList = (ArrayList<MensajeChat>) gson.fromJson(json, ArrayList.class);
+                    resultList.add(Parseador.parsearMensaje(message));
+
+                    json = gson.toJson(resultList);
+
+                    prefs.edit().putString("messages", json).apply();
+
                 }
             }
         });

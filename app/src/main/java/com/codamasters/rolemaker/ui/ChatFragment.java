@@ -19,12 +19,15 @@ import com.codamasters.rolemaker.controller.GcmMessageAsyncTask;
 import com.codamasters.rolemaker.utils.MensajeChat;
 import com.codamasters.rolemaker.utils.ObjectSerializer;
 import com.codamasters.rolemaker.utils.Parseador;
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.simple.JSONObject;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -37,7 +40,6 @@ public class ChatFragment extends Fragment {
     private static final String ARG_PARAM = "param1";
 
     // Hashmap for ListView
-    private static ArrayList<String> resultList;
     private static ArrayList<MensajeChat> listaMensajes;
     private static PostAdapter adapter;
     private ListView lv;
@@ -72,17 +74,16 @@ public class ChatFragment extends Fragment {
         //      load tasks from preference
         prefs = getActivity().getSharedPreferences("SHARED_MESSAGES", Context.MODE_PRIVATE);
 
-        resultList = new ArrayList<String>();
-        listaMensajes = new ArrayList<>();
-
-        try {
-            resultList = (ArrayList<String>) ObjectSerializer.deserialize(prefs.getString("messages", ObjectSerializer.serialize(new ArrayList<String>())));
-            if(resultList.size()<0)
-                listaMensajes = Parseador.parsearListaMensajes(resultList);
-        } catch (IOException e) {
-
-            e.printStackTrace();
+        Gson gson = new Gson();
+        String json = prefs.getString("messages", "");
+        if(json == ""){
+            listaMensajes = new ArrayList<MensajeChat>();
         }
+        else{
+            Type type = new TypeToken<ArrayList<MensajeChat>>(){}.getType();
+            listaMensajes = (ArrayList<MensajeChat>) gson.fromJson(json, type);
+        }
+
 
         tv = (TextView) rootView.findViewById(R.id.textMessage);
         bSend= (Button)rootView.findViewById(R.id.sendButton);
@@ -99,7 +100,6 @@ public class ChatFragment extends Fragment {
             }
         });
 
-        //adapter = new ArrayAdapter<String>(getActivity(), R.layout.list_item, R.id.content, resultList);
         adapter = new PostAdapter(getActivity());
 
 
@@ -133,7 +133,6 @@ public class ChatFragment extends Fragment {
 
     public static void updateMessages(String message) {
 
-        resultList.add(message);
         listaMensajes.add(Parseador.parsearMensaje(message));
         adapter.notifyDataSetChanged();
 
@@ -146,13 +145,11 @@ public class ChatFragment extends Fragment {
         // Guardamos los datos del chat
 
         prefs = getActivity().getSharedPreferences("SHARED_MESSAGES", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        try {
-            editor.putString("messages", ObjectSerializer.serialize(resultList));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        editor.commit();
+        Gson gson = new Gson();
+        String json = gson.toJson(listaMensajes);
+
+        Log.d("Mensajes serializados",json+"");
+        prefs.edit().putString("messages", json).apply();
 
         open=false;
     }
@@ -163,12 +160,11 @@ public class ChatFragment extends Fragment {
 
         prefs = getActivity().getSharedPreferences("SHARED_MESSAGES", Context.MODE_PRIVATE);
 
-        try {
-            resultList = (ArrayList<String>) ObjectSerializer.deserialize(prefs.getString("messages", ObjectSerializer.serialize(new ArrayList<String>())));
-            if(resultList.size()<0)
-                listaMensajes = Parseador.parsearListaMensajes(resultList);
-        } catch (IOException e) {
-            e.printStackTrace();
+        Gson gson = new Gson();
+        String json = prefs.getString("messages", "");
+        if(listaMensajes.size() > 0) {
+            Type type = new TypeToken<ArrayList<MensajeChat>>(){}.getType();
+            listaMensajes = (ArrayList<MensajeChat>) gson.fromJson(json, type);
         }
 
         adapter.notifyDataSetChanged();
