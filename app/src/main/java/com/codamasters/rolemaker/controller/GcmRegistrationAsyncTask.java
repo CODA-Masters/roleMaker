@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
+import com.codamasters.rolemaker.utils.Constants;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
@@ -22,7 +23,7 @@ public class GcmRegistrationAsyncTask extends AsyncTask<Context, Void, String> {
     private String regName, regEmail, regPassword;
 
     // TODO: change to your own sender ID to Google Developers Console project number, as per instructions above
-    private static final String SENDER_ID = "294669629340";
+    private static final String SENDER_ID = Constants.SENDER_ID;
 
     public GcmRegistrationAsyncTask(Context context, String regName, String regEmail, String regPassword) {
         this.context = context; this.regName = regName; this.regEmail = regEmail; this.regPassword = regPassword;
@@ -45,7 +46,7 @@ public class GcmRegistrationAsyncTask extends AsyncTask<Context, Void, String> {
                     });
             */// end of optional local run code
             Registration.Builder builder = new Registration.Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(), null)
-                    .setRootUrl("https://role-maker.appspot.com/_ah/api/");
+                    .setRootUrl(Constants.SERVER_URL);
             regService = builder.build();
         }
 

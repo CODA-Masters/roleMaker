@@ -3,6 +3,7 @@ package com.codamasters.rolemaker.controller;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import com.codamasters.rolemaker.utils.Constants;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
@@ -22,7 +23,7 @@ public class GcmMessageAsyncTask  extends AsyncTask<Context, Void, String> {
     private String message;
 
     // TODO: change to your own sender ID to Google Developers Console project number, as per instructions above
-    private static final String SENDER_ID = "294669629340";
+    private static final String SENDER_ID = Constants.SENDER_ID;
 
     public GcmMessageAsyncTask(Context context, String message) {
         this.context = context; this.message = message;
@@ -32,7 +33,7 @@ public class GcmMessageAsyncTask  extends AsyncTask<Context, Void, String> {
     protected String doInBackground(Context... params) {
         if (regService == null) {
             Messaging.Builder builder = new Messaging.Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(), null)
-                    .setRootUrl("https://role-maker.appspot.com/_ah/api/");
+                    .setRootUrl(Constants.SERVER_URL);
             regService = builder.build();
         }
 

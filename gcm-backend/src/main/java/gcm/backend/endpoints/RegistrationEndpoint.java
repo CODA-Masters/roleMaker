@@ -108,18 +108,18 @@ public class RegistrationEndpoint {
         UserRecord friend = findRecord(Long.parseLong(addFriendID));
         boolean mutualRequest = false;
 
+        System.out.println("Envio de petición de amigo");
+
         JSONParser parser=new JSONParser();
         String s;
         if(user != null && friend != null) {
-            s = friend.getFriendRequestsSent();
+            s = user.getFriendRequestsReceived();
             try {
                 Object obj = parser.parse(s);
                 JSONArray array = (JSONArray) obj;
-                for (int i = 0; i < array.size(); i++){
-                    if(array.get(i) == addUserID) {
-                        mutualRequest = true;
-                        break;
-                    }
+                if(array.contains(addFriendID)) {
+                    System.out.println("Hay agregación mutua");
+                    mutualRequest = true;
                 }
             } catch (org.json.simple.parser.ParseException e) {
                 e.printStackTrace();
@@ -127,8 +127,6 @@ public class RegistrationEndpoint {
 
             // Si no se produce una petición mutua se manda una petición y el otro la recibe
             if(!mutualRequest) {
-                user.setFriendRequestsSent(s);
-                ofy().save().entity(user).now();
 
                 parser = new JSONParser();
                 s = user.getFriendRequestsSent();
@@ -142,8 +140,6 @@ public class RegistrationEndpoint {
                 }
 
                 user.setFriendRequestsSent(s);
-                ofy().save().entity(user).now();
-
 
                 parser = new JSONParser();
                 s = friend.getFriendRequestsReceived();
@@ -157,12 +153,10 @@ public class RegistrationEndpoint {
                 }
                 friend.setFriendRequestsReceived(s);
 
-                ofy().save().entity(friend).now();
             }
             // Si el otro ya había mandado una petición se debería borrar la petición  en ambas entidades y
             // añadirse como amigos mutuamente
             else{
-                user.setFriendRequestsReceived(s);
 
                 s = user.getFriends();
                 try {
@@ -175,9 +169,6 @@ public class RegistrationEndpoint {
                 }
 
                 user.setFriends(s);
-
-                ofy().save().entity(user).now();
-
 
                 parser=new JSONParser();
 
@@ -192,6 +183,17 @@ public class RegistrationEndpoint {
                 }
                 friend.setFriendRequestsSent(s);
 
+                s = user.getFriendRequestsReceived();
+                try {
+                    Object obj = parser.parse(s);
+                    JSONArray array = (JSONArray) obj;
+                    array.remove(addFriendID);
+                    s = array.toJSONString();
+                } catch (org.json.simple.parser.ParseException e) {
+                    e.printStackTrace();
+                }
+                user.setFriendRequestsReceived(s);
+
                 s = friend.getFriends();
                 try {
                     Object obj = parser.parse(s);
@@ -203,8 +205,9 @@ public class RegistrationEndpoint {
                 }
                 friend.setFriends(s);
 
-                ofy().save().entity(friend).now();
             }
+            ofy().save().entity(friend).now();
+            ofy().save().entity(user).now();
         }
 
     }

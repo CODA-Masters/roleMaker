@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.codamasters.rolemaker.utils.Constants;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 
@@ -23,7 +24,7 @@ public class GcmDenyFriendRequestAsyncTask extends AsyncTask<Context, Void, Stri
     private ProgressDialog pDialog;
 
     // TODO: change to your own sender ID to Google Developers Console project number, as per instructions above
-    private static final String SENDER_ID = "294669629340";
+    private static final String SENDER_ID = Constants.SENDER_ID;
 
     public GcmDenyFriendRequestAsyncTask(Context context, String addFriendID) {
         this.context = context;
@@ -45,7 +46,7 @@ public class GcmDenyFriendRequestAsyncTask extends AsyncTask<Context, Void, Stri
     protected String doInBackground(Context... params) {
         if (regService == null) {
             Registration.Builder builder = new Registration.Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(), null)
-                    .setRootUrl("https://role-maker.appspot.com/_ah/api/");
+                    .setRootUrl(Constants.SERVER_URL);
             regService = builder.build();
         }
 
