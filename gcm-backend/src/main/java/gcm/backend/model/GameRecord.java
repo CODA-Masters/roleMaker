@@ -8,7 +8,7 @@ import com.googlecode.objectify.annotation.Index;
  * Created by Alex on 28/07/2015.
  */
 @Entity
-public class Partida {
+public class GameRecord {
 
     @Index
     @Id
@@ -29,7 +29,7 @@ public class Partida {
                                     // Representa los atributos que podrán tener los jugadores en esta partida.
 
 
-    public Partida() {
+    public GameRecord() {
     }
 
     public Long getId() {

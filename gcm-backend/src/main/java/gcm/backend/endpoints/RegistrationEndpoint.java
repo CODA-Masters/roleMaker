@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 
 import javax.inject.Named;
 
+import gcm.backend.model.GameRecord;
 import gcm.backend.model.UserRecord;
 
 import static gcm.backend.utils.OfyService.ofy;
@@ -373,5 +374,32 @@ public class RegistrationEndpoint {
         UserRecord user = findRecord(Long.parseLong(userID));
         user.setRegId(regID);
         ofy().save().entity(user).now();
+    }
+
+    @ApiMethod(name="createGame")
+    public void createGame(@Named ("name") String name, @Named("master") String master, @Named("players") String players,
+                           @Named("maxPlayers") int maxPlayers, @Named("description") String description,
+                           @Named("style") String style, @Named("playerAttributes") String playerAttributes){
+
+        GameRecord game = new GameRecord();
+        game.setName(name);
+        game.setMaster(master);
+        game.setPlayers(players);
+        game.setMaxPlayers(maxPlayers);
+        game.setDescription(description);
+        game.setStyle(style);
+        game.setPlayerAttributes(playerAttributes);
+
+        JSONParser parser=new JSONParser();
+        String s = players;
+        try {
+            Object obj = parser.parse(s);
+            JSONArray array = (JSONArray) obj;
+            game.setNumPlayers(array.size());
+        } catch (org.json.simple.parser.ParseException e) {
+            e.printStackTrace();
+        }
+
+        ofy().save().entity(game).now();
     }
 }

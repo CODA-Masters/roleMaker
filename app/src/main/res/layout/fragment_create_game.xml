@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -15,38 +19,30 @@
             android:text="Game Name"
             android:textSize="25dp"
             android:id="@+id/tvGameName" />
-
+s
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
             android:ems="10"
-            android:id="@+id/etDescription"
-            android:layout_gravity="center_horizontal" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Description"
-            android:textSize="25dp"
-            android:id="@+id/tvDescription" />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="text"
-            android:ems="10"
             android:id="@+id/etGameName"
             android:layout_gravity="center_horizontal" />
 
     </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Description"
+        android:textSize="25dp"
+        android:id="@+id/tvDescription" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine"
+        android:ems="10"
+        android:id="@+id/etDescription" />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -61,7 +57,7 @@
             android:id="@+id/tvMaxPlayers" />
 
         <EditText
-            android:layout_width="match_parent"
+            android:layout_width="53dp"
             android:layout_height="wrap_content"
             android:inputType="number"
             android:ems="10"
@@ -73,8 +69,7 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.67">
+        android:layout_height="166dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -137,4 +132,11 @@
         android:text="Invite friends"
         android:id="@+id/bInviteFriends" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create Game"
+        android:id="@+id/bCreate" />
+
 </LinearLayout>
+</ScrollView>
