@@ -113,7 +113,7 @@ public class ChatFragment extends Fragment {
         String message = tv.getText().toString();
         String username = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("username", "nothing");
 
-        String DATE_FORMAT_NOW = "HH:mm:ss dd/mm/yyy";
+        String DATE_FORMAT_NOW = "HH:mm:ss dd/MM/yyy";
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
         String stringDate = sdf.format(date );
@@ -246,7 +246,7 @@ public class ChatFragment extends Fragment {
             else
                 holder.usuario.setText(getString(R.string.me));
             Date date = mc.getFecha();
-            String DATE_FORMAT_NOW = "HH:mm:ss dd/mm/yyy";
+            String DATE_FORMAT_NOW = "HH:mm:ss dd/MM/yyy";
             SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
             holder.fecha.setText(sdf.format(date).toString());
 

@@ -11,7 +11,8 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -42,12 +43,14 @@ s
         android:layout_height="wrap_content"
         android:inputType="textMultiLine"
         android:ems="10"
-        android:id="@+id/etDescription" />
+        android:id="@+id/etDescription"
+        android:layout_marginBottom="20dp" />
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -66,71 +69,55 @@ s
 
     </LinearLayout>
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="166dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="25dp"
-            android:text="Game Style:"
-            android:id="@+id/tGameStyle" />
-
-        <RadioGroup
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/rgStyle">
-
-            <RadioButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Medieval Fantasy"
-                android:id="@+id/rbFantasy"
-                android:checked="true" />
-
-            <RadioButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Futuristic"
-                android:id="@+id/rbFuturistic"
-                android:checked="false" />
-
-            <RadioButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Realistic"
-                android:id="@+id/rbRealistic"
-                android:checked="false" />
-
-            <RadioButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Steampunk"
-                android:id="@+id/rbSteampunk"
-                android:checked="false" />
-        </RadioGroup>
-    </LinearLayout>
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="25dp"
-        android:text="Set Player Attributes"
-        android:id="@+id/tPlayerAttributes" />
+        android:text="Game Style"
+        android:id="@+id/tGameStyle"
+        android:layout_marginBottom="10dp" />
 
-    <ListView
+    <RadioGroup
         android:layout_width="match_parent"
-        android:layout_height="93dp"
-        android:id="@+id/listView"
-        android:layout_weight="0.18" />
+        android:layout_height="match_parent"
+        android:id="@+id/rgStyle"
+        android:layout_marginBottom="20dp">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Invite friends"
-        android:id="@+id/bInviteFriends" />
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Medieval Fantasy"
+            android:id="@+id/rbFantasy"
+            android:checked="true" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Futuristic"
+            android:id="@+id/rbFuturistic"
+            android:checked="false" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Realistic"
+            android:id="@+id/rbRealistic"
+            android:checked="false" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Steampunk"
+            android:id="@+id/rbSteampunk"
+            android:checked="false" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Historical"
+            android:id="@+id/rbHistorical"
+            android:checked="false" />
+    </RadioGroup>
 
     <Button
         android:layout_width="wrap_content"
