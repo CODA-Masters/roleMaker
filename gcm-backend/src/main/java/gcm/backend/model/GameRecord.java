@@ -25,8 +25,6 @@ public class GameRecord {
     private String description; // Descripción de la partida
     private String style; // Estilo de partida (A elegir para personalizar skins o cualquier otra cosa):
                         // fantasía medieval, futurista, steampunk, realista)
-    private String playerAttributes; // Hashmap (diccionario) de atributos algo como Hashmap<String,Atributos>
-                                    // Representa los atributos que podrán tener los jugadores en esta partida.
 
 
     public GameRecord() {
@@ -62,14 +60,6 @@ public class GameRecord {
 
     public void setPlayers(String players) {
         this.players = players;
-    }
-
-    public String getPlayerAttributes() {
-        return playerAttributes;
-    }
-
-    public void setPlayerAttributes(String playerAttributes) {
-        this.playerAttributes = playerAttributes;
     }
 
     public String getDescription() {

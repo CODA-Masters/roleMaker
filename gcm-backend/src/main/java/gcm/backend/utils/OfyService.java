@@ -4,6 +4,7 @@ import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.ObjectifyService;
 
+import gcm.backend.model.GameRecord;
 import gcm.backend.model.UserRecord;
 
 /**
@@ -14,6 +15,7 @@ public class OfyService {
 
     static {
         ObjectifyService.register(UserRecord.class);
+        ObjectifyService.register(GameRecord.class);
     }
 
     public static Objectify ofy() {
