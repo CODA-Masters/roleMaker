@@ -93,7 +93,7 @@ public class JoinGameFragment extends Fragment {
     public class PostAdapter extends BaseAdapter {
 
         class ViewHolder {
-            TextView game_name, master_name, num_players, description;
+            TextView game_name, master_name, num_players, description, game_style;
             Button joinButton;
 
         }
@@ -154,6 +154,8 @@ public class JoinGameFragment extends Fragment {
                         .findViewById(R.id.num_players);
                 holder.description = (TextView) convertView
                         .findViewById(R.id.description);
+                holder.game_style = (TextView) convertView
+                        .findViewById(R.id.game_style);
                 holder.joinButton = (Button) convertView.findViewById(R.id.joinButton);
 
                 convertView.setTag(holder);
@@ -164,7 +166,9 @@ public class JoinGameFragment extends Fragment {
             // Setting all values in listview
             holder.game_name.setText(resultList.get(position).get("name"));
             holder.master_name.setText(resultList.get(position).get("master"));
-            holder.num_players.setText(resultList.get(position).get("numPlayers"));
+            holder.num_players.setText(resultList.get(position).get("numPlayers")+
+            "/"+resultList.get(position).get("maxPlayers"));
+            holder.game_style.setText(resultList.get(position).get("style"));
             holder.description.setText(resultList.get(position).get("description"));
             holder.joinButton.setOnClickListener(new View.OnClickListener() {
                 @Override

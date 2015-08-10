@@ -394,6 +394,9 @@ public class RegistrationEndpoint {
     @ApiMethod(name = "listGames")
     public CollectionResponse<GameRecord> listGames(){
         List<GameRecord> games = ofy().load().type(GameRecord.class).list();
+        for(GameRecord game : games){
+            game.setMaster(findRecord(Long.parseLong(game.getMaster())).getName());
+        }
         return CollectionResponse.<GameRecord>builder().setItems(games).build();
     }
 }
