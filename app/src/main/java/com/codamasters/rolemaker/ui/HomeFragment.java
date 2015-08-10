@@ -1,6 +1,7 @@
 package com.codamasters.rolemaker.ui;
 
 import android.app.Activity;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -24,7 +25,7 @@ public class HomeFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_SECTION_NUMBER = "section_number";
 
-    Button bOpenChat,bShowUsers,bShowFriends, bShowRequests, bCreateGame;
+    Button bOpenChat,bShowUsers,bShowFriends, bShowRequests, bCreateGame, bJoinGame;
 
 
     private OnFragmentInteractionListener mListener;
@@ -83,6 +84,13 @@ public class HomeFragment extends Fragment {
                 .commit();
     }
 
+    public void joinGame (View view){
+        getFragmentManager().beginTransaction()
+                .addToBackStack("")
+                .replace(R.id.container, JoinGameFragment.newInstance(""))
+                .commit();
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,6 +105,7 @@ public class HomeFragment extends Fragment {
         bShowFriends=(Button) rootView.findViewById(R.id.bShowFriends);
         bShowRequests=(Button) rootView.findViewById(R.id.bShowRequests);
         bCreateGame=(Button) rootView.findViewById(R.id.bCreateGame);
+        bJoinGame=(Button) rootView.findViewById(R.id.bJoinGame);
         setListeners();
         return rootView;
     }
@@ -130,6 +139,12 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 createGame(v);
+            }
+        });
+        bJoinGame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                joinGame(v);
             }
         });
     }

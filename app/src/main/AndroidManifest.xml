@@ -60,28 +60,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name="com.codamasters.rolemaker.ui.ChatActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.ChatActivity" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-
-        <activity
-            android:name="com.codamasters.rolemaker.ui.ShowUsersActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.ShowUsersActivity" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-
         <receiver
             android:name="com.codamasters.rolemaker.controller.GcmBroadcastReceiver"
             android:permission="com.google.android.c2dm.permission.SEND" >

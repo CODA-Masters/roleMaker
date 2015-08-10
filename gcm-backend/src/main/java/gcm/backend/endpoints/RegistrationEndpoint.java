@@ -390,4 +390,10 @@ public class RegistrationEndpoint {
 
         ofy().save().entity(game).now();
     }
+
+    @ApiMethod(name = "listGames")
+    public CollectionResponse<GameRecord> listGames(){
+        List<GameRecord> games = ofy().load().type(GameRecord.class).list();
+        return CollectionResponse.<GameRecord>builder().setItems(games).build();
+    }
 }

@@ -40,4 +40,10 @@
         android:text="create game"
         android:id="@+id/bCreateGame" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="join game"
+        android:id="@+id/bJoinGame" />
+
 </LinearLayout>
