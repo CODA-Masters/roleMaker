@@ -92,8 +92,9 @@ public class GcmIntentService extends IntentService {
         @SuppressWarnings("deprecation")
 
         Notification notification = new Notification(R.drawable.abc_ab_share_pack_holo_dark,"Role Maker", System.currentTimeMillis());
+        notification.flags |= Notification.FLAG_AUTO_CANCEL;
         Intent notificationIntent = new Intent(this,LoggedActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,notificationIntent, 0);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         notification.setLatestEventInfo(GcmIntentService.this, notificationTitle,notificationMessage, pendingIntent);
         notificationManager.notify(9999, notification);
