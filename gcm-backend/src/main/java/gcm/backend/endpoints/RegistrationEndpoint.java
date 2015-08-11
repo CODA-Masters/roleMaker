@@ -369,8 +369,10 @@ public class RegistrationEndpoint {
     }
 
     @ApiMethod(name = "listUsers")
-    public CollectionResponse<UserRecord> showUsers(@Named("count") int count){
+    public CollectionResponse<UserRecord> showUsers(@Named("count") int count, @Named("userID") String userID){
         List<UserRecord> users = ofy().load().type(UserRecord.class).limit(count).list();
+        UserRecord user = findRecord(Long.parseLong(userID));
+        users.remove(user);
         return CollectionResponse.<UserRecord>builder().setItems(users).build();
     }
 

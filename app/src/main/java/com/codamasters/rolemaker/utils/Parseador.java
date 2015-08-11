@@ -13,9 +13,11 @@ public class Parseador {
 
     public static ArrayList<MensajeChat> parsearListaMensajes(ArrayList<String> lista){
         ArrayList<MensajeChat> lista_mensajes = new ArrayList<>();
-        for (String str : lista){
-            MensajeChat mc = parsearMensaje(str);
-            lista_mensajes.add(mc);
+        for (String str : lista) {
+            if (str != null){
+                MensajeChat mc = parsearMensaje(str);
+                lista_mensajes.add(mc);
+            }
         }
         return lista_mensajes;
     }
@@ -27,7 +29,8 @@ public class Parseador {
             mc.setMensaje(jsonob.getString(MENSAJE));
             mc.setUser(jsonob.getString(USER));
         } catch (JSONException e) {
-        e.printStackTrace();}
+            e.printStackTrace();
+        }
 
         return mc;
     }

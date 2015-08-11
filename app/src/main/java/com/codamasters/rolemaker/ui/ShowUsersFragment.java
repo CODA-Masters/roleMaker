@@ -2,6 +2,7 @@ package com.codamasters.rolemaker.ui;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +17,9 @@ import android.widget.TextView;
 import com.codamasters.rolemaker.R;
 import com.codamasters.rolemaker.controller.GcmAddFriendAsyncTask;
 import com.codamasters.rolemaker.controller.GcmShowUsersAsyncTask;
+
+import org.json.simple.JSONArray;
+import org.json.simple.parser.JSONParser;
 
 import java.util.ArrayList;
 
@@ -32,6 +36,10 @@ public class ShowUsersFragment extends Fragment {
     private static ArrayList<String> resultList;
     private static ArrayList<String> requestList;
     private static ArrayList<UserRecord> userList;
+    private static  ArrayList<String> friendIDs;
+    private static  ArrayList<String> userIDs;
+    private static  ArrayList<String> requestSentIDs;
+    private static  ArrayList<String> requestReceivedIDs;
 
     private static PostAdapter adapter;
     private ListView searchListView;
@@ -70,18 +78,61 @@ public class ShowUsersFragment extends Fragment {
 
         searchListView.setAdapter(adapter);
 
-        new GcmShowUsersAsyncTask(getActivity()).execute();
+        String myId = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("user", "nothing");
+
+        new GcmShowUsersAsyncTask(getActivity(), myId).execute();
         return rootView;
     }
 
 
-    public static void ListUsers(ArrayList<UserRecord> users){
+    public static void ListUsers(ArrayList<UserRecord> users, UserRecord user){
         userList = users;
         ArrayList<String> usernames = new ArrayList<String>();
+        userIDs = new ArrayList<String>();
+        requestSentIDs = new ArrayList<String>();
+        requestReceivedIDs = new ArrayList<String>();
         for(int i = 0; i < users.size(); i++){
             usernames.add(users.get(i).getName());
+            userIDs.add(users.get(i).getId().toString());
         }
+
+        friendIDs = new ArrayList<>();
+        JSONParser parser=new JSONParser();
+        String s = user.getFriends();
+        try {
+            Object obj = parser.parse(s);
+            JSONArray array = (JSONArray) obj;
+            for(int i = 0; i < array.size(); i++){
+                friendIDs.add((String) array.get(i));
+            }
+        } catch (org.json.simple.parser.ParseException e) {
+            e.printStackTrace();
+        }
+
+        s = user.getFriendRequestsSent();
+        try {
+            Object obj = parser.parse(s);
+            JSONArray array = (JSONArray) obj;
+            for(int i = 0; i < array.size(); i++){
+                requestSentIDs.add((String) array.get(i));
+            }
+        } catch (org.json.simple.parser.ParseException e) {
+            e.printStackTrace();
+        }
+
+        s = user.getFriendRequestsReceived();
+        try {
+            Object obj = parser.parse(s);
+            JSONArray array = (JSONArray) obj;
+            for(int i = 0; i < array.size(); i++){
+                requestReceivedIDs.add((String) array.get(i));
+            }
+        } catch (org.json.simple.parser.ParseException e) {
+            e.printStackTrace();
+        }
+
         resultList = usernames;
+
 
         adapter.notifyDataSetChanged();
     }
@@ -159,14 +210,29 @@ public class ShowUsersFragment extends Fragment {
 
             // Setting all values in listview
             holder.user_item.setText(resultList.get(position));
-            holder.addFriend.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ArrayList<UserRecord> userList = ShowUsersFragment.getUserList();
-                    String friendID = userList.get(position).getId() + "";
-                    new GcmAddFriendAsyncTask(getActivity(), friendID).execute();
-                }
-            });
+
+            if(!friendIDs.contains(userIDs.get(position))) {
+                holder.addFriend.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ArrayList<UserRecord> userList = ShowUsersFragment.getUserList();
+                        String friendID = userList.get(position).getId() + "";
+                        new GcmAddFriendAsyncTask(getActivity(), friendID).execute();
+                    }
+                });
+            }
+            else if(requestSentIDs.contains(userIDs.get(position))) {
+                holder.addFriend.setText("Request sent");
+                holder.addFriend.setEnabled(false);
+            }
+            else if(requestReceivedIDs.contains(userIDs.get(position))) {
+                holder.addFriend.setText("Request received");
+                holder.addFriend.setEnabled(false);
+            }
+            else{
+                holder.addFriend.setText("Friend already added");
+                holder.addFriend.setEnabled(false);
+            }
 
             return convertView;
         }

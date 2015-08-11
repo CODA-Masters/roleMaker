@@ -26,12 +26,16 @@ public class GcmShowUsersAsyncTask extends AsyncTask<Context, Void, String> {
     private Context context;
     private ArrayList<UserRecord> users;
     private ProgressDialog pDialog;
+    private String userID;
+    private UserRecord user;
+
 
     // TODO: change to your own sender ID to Google Developers Console project number, as per instructions above
     private static final String SENDER_ID = Constants.SENDER_ID;
 
-    public GcmShowUsersAsyncTask(Context context) {
+    public GcmShowUsersAsyncTask(Context context, String userID) {
         this.context = context;
+        this.userID = userID;
     }
 
 
@@ -70,8 +74,9 @@ public class GcmShowUsersAsyncTask extends AsyncTask<Context, Void, String> {
         try {
 
             int count = 10;
-            CollectionResponseUserRecord usersCollection = regService.listUsers(count).execute();
-            users = (ArrayList)usersCollection.getItems();
+            CollectionResponseUserRecord usersCollection = regService.listUsers(count, userID).execute();
+            user = regService.listFriends(userID).execute();
+            users = (ArrayList) usersCollection.getItems();
 
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -87,7 +92,7 @@ public class GcmShowUsersAsyncTask extends AsyncTask<Context, Void, String> {
         if (pDialog.isShowing())
             pDialog.dismiss();
 
-        ShowUsersFragment.ListUsers(users);
+        ShowUsersFragment.ListUsers(users, user);
 
 
 
