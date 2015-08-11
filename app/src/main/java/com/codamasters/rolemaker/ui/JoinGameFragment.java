@@ -97,10 +97,7 @@ public class JoinGameFragment extends Fragment {
                 Object obj = parser.parse(s);
                 JSONArray array = (JSONArray) obj;
                 for(int i = 0; i < array.size(); i++){
-                    Log.d("Elemento del array",array.get(i).toString());
-                    Log.d("ID del usuario",userID);
                     if(array.get(i).toString().equals(userID)){
-                        Log.d("Ea","Entramos al condiciono");
                         joined = true;
                         break;
                     }
@@ -213,6 +210,8 @@ public class JoinGameFragment extends Fragment {
                     }
                 });
             }
+
+            joined = false;
 
             return convertView;
         }
