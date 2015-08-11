@@ -91,6 +91,7 @@ public class ShowUsersFragment extends Fragment {
         userIDs = new ArrayList<String>();
         requestSentIDs = new ArrayList<String>();
         requestReceivedIDs = new ArrayList<String>();
+
         for(int i = 0; i < users.size(); i++){
             usernames.add(users.get(i).getName());
             userIDs.add(users.get(i).getId().toString());
@@ -211,15 +212,9 @@ public class ShowUsersFragment extends Fragment {
             // Setting all values in listview
             holder.user_item.setText(resultList.get(position));
 
-            if(!friendIDs.contains(userIDs.get(position))) {
-                holder.addFriend.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ArrayList<UserRecord> userList = ShowUsersFragment.getUserList();
-                        String friendID = userList.get(position).getId() + "";
-                        new GcmAddFriendAsyncTask(getActivity(), friendID).execute();
-                    }
-                });
+            if(friendIDs.contains(userIDs.get(position))) {
+                holder.addFriend.setText("Friend already added");
+                holder.addFriend.setEnabled(false);
             }
             else if(requestSentIDs.contains(userIDs.get(position))) {
                 holder.addFriend.setText("Request sent");
@@ -230,8 +225,14 @@ public class ShowUsersFragment extends Fragment {
                 holder.addFriend.setEnabled(false);
             }
             else{
-                holder.addFriend.setText("Friend already added");
-                holder.addFriend.setEnabled(false);
+                holder.addFriend.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ArrayList<UserRecord> userList = ShowUsersFragment.getUserList();
+                        String friendID = userList.get(position).getId() + "";
+                        new GcmAddFriendAsyncTask(getActivity(), friendID).execute();
+                    }
+                });
             }
 
             return convertView;
