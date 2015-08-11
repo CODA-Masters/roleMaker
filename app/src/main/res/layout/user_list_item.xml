@@ -1,45 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:padding="10dp"
     android:paddingLeft="10dp"
     android:paddingRight="10dp" >
 
-    <!--
-    <TextView
-        android:id="@+id/author"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="2dip"
-        android:paddingTop="6dip"
-        android:textSize="22sp"
-        android:textStyle="bold" />
-        -->
-
-    <!-- Content label -->
     <TextView
         android:id="@+id/user_item"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:layout_weight="1"
         android:textSize="18sp" />
 
-    <Button
+    <!-- Content label -->
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Show Profile"
-        android:layout_weight="0"
-        android:id="@+id/showProfile" />
+        android:layout_height="wrap_content">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add friend"
-        android:layout_weight="0"
-        android:id="@+id/addFriendButton" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add friend"
+            android:layout_weight="0"
+            android:id="@+id/addFriendButton" />
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Show Profile"
+            android:layout_weight="0"
+            android:id="@+id/showProfile" />
+    </LinearLayout>
 
 
 </LinearLayout>
