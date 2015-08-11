@@ -15,9 +15,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.codamasters.rolemaker.R;
+import com.codamasters.rolemaker.controller.GcmIntentService;
 import com.codamasters.rolemaker.controller.GcmMessageAsyncTask;
 import com.codamasters.rolemaker.utils.MensajeChat;
-import com.codamasters.rolemaker.utils.ObjectSerializer;
 import com.codamasters.rolemaker.utils.Parseador;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
@@ -169,6 +169,7 @@ public class ChatFragment extends Fragment {
 
         adapter.notifyDataSetChanged();
         open=true;
+        GcmIntentService.setNum_messages(0);
 
     }
 
