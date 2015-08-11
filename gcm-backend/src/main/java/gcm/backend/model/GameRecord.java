@@ -21,6 +21,7 @@ public class GameRecord {
     private String master; // ID del master
     private String players; // Array de IDs de jugadores
     private int numPlayers; // Número de ugadores actualmente en partida
+    private String pendingPlayers; // Jugadores que han solicitado entrar en la partida.
     private int maxPlayers; // Número máximo de jugadores permitidos
     private String description; // Descripción de la partida
     private String style; // Estilo de partida (A elegir para personalizar skins o cualquier otra cosa):
@@ -92,5 +93,13 @@ public class GameRecord {
 
     public void setMaxPlayers(int maxPlayers) {
         this.maxPlayers = maxPlayers;
+    }
+
+    public String getPendingPlayers() {
+        return pendingPlayers;
+    }
+
+    public void setPendingPlayers(String pendingPlayers) {
+        this.pendingPlayers = pendingPlayers;
     }
 }

@@ -2,6 +2,7 @@ package com.codamasters.rolemaker.ui;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,8 +14,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.codamasters.rolemaker.R;
+import com.codamasters.rolemaker.controller.GcmJoinGameAsyncTask;
 import com.codamasters.rolemaker.controller.GcmShowGamesAsyncTask;
-import com.codamasters.rolemaker.controller.GcmShowUsersAsyncTask;
+
+import org.json.simple.JSONArray;
+import org.json.simple.parser.JSONParser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,6 +34,9 @@ public class JoinGameFragment extends Fragment {
     // Hashmap for ListView
     private static ArrayList<HashMap<String, String> > resultList;  // Array que almacena los registros de partidas
     // Cada registro de partida está representado por un Hashmap que incluye los distintos campos del mismo.
+
+    private static boolean joined;
+    private static String userID;
 
     private static PostAdapter adapter;
     private ListView lv;
@@ -63,6 +70,9 @@ public class JoinGameFragment extends Fragment {
 
         lv.setAdapter(adapter);
 
+        userID = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("user", "nothing");
+        joined = false;
+
         new GcmShowGamesAsyncTask(getActivity()).execute();
 
         return rootView;
@@ -72,12 +82,32 @@ public class JoinGameFragment extends Fragment {
         for (GameRecord game: gameList){
             HashMap<String, String> aux = new HashMap<>();
 
+            aux.put("gameID",game.getId().toString());
             aux.put("name",game.getName());
             aux.put("master",game.getMaster());
             aux.put("numPlayers",game.getNumPlayers().toString());
             aux.put("maxPlayers",game.getMaxPlayers().toString());
             aux.put("description",game.getDescription());
             aux.put("style", game.getStyle());
+
+            JSONParser parser=new JSONParser();
+            String s = game.getPendingPlayers();
+
+            try {
+                Object obj = parser.parse(s);
+                JSONArray array = (JSONArray) obj;
+                for(int i = 0; i < array.size(); i++){
+                    Log.d("Elemento del array",array.get(i).toString());
+                    Log.d("ID del usuario",userID);
+                    if(array.get(i).toString().equals(userID)){
+                        Log.d("Ea","Entramos al condiciono");
+                        joined = true;
+                        break;
+                    }
+                }
+            } catch (org.json.simple.parser.ParseException e) {
+                e.printStackTrace();
+            }
 
             resultList.add(aux);
 
@@ -142,7 +172,12 @@ public class JoinGameFragment extends Fragment {
                     + ((convertView == null) ? "null" : "being recycled"));
 
             if (convertView == null) {
-                convertView = inflater.inflate(R.layout.game_list_item, null);
+                if(!joined) {
+                    convertView = inflater.inflate(R.layout.game_list_item, null);
+                }
+                else{
+                    convertView = inflater.inflate(R.layout.game_list_joined_item, null);
+                }
 
                 holder = new ViewHolder();
 
@@ -170,12 +205,14 @@ public class JoinGameFragment extends Fragment {
             "/"+resultList.get(position).get("maxPlayers"));
             holder.game_style.setText(resultList.get(position).get("style"));
             holder.description.setText(resultList.get(position).get("description"));
-            holder.joinButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                }
-            });
+            if(!joined) {
+                holder.joinButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        new GcmJoinGameAsyncTask(getActivity(), resultList.get(position).get("gameID")).execute();
+                    }
+                });
+            }
 
             return convertView;
         }

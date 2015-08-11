@@ -89,6 +89,11 @@ public class RegistrationEndpoint {
         return ofy().load().type(UserRecord.class).filter("name", regName).first().now();
     }
 
+    @ApiMethod(name = "findGame")
+    public GameRecord findGame(@Named("id") Long id) {
+        return ofy().load().type(GameRecord.class).filter("id", id).first().now();
+    }
+
     @ApiMethod(name = "login")
     public UserRecord login(@Named("regName") String name, @Named("regPassword") String password) {
         UserRecord user = findRecordbyName(name);
@@ -387,6 +392,7 @@ public class RegistrationEndpoint {
         game.setDescription(description);
         game.setStyle(style);
         game.setPlayers("[]");
+        game.setPendingPlayers("[]");
 
         ofy().save().entity(game).now();
     }
@@ -398,5 +404,26 @@ public class RegistrationEndpoint {
             game.setMaster(findRecord(Long.parseLong(game.getMaster())).getName());
         }
         return CollectionResponse.<GameRecord>builder().setItems(games).build();
+    }
+
+    @ApiMethod(name = "joinGame")
+    public void joinGame(@Named("userID") String userID, @Named("gameID") String gameID){
+        GameRecord game = findGame(Long.parseLong(gameID));
+
+        JSONParser parser=new JSONParser();
+        String s = game.getPendingPlayers();
+        try {
+            Object obj = parser.parse(s);
+            JSONArray array = (JSONArray) obj;
+            array.add(userID);
+            s = array.toJSONString();
+        } catch (org.json.simple.parser.ParseException e) {
+            e.printStackTrace();
+        }
+        game.setPendingPlayers(s);
+
+        if(game != null) {
+            ofy().save().entity(game).now();
+        }
     }
 }
