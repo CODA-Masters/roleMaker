@@ -93,7 +93,7 @@ public class ShowFriendsFragment extends Fragment {
 
         class ViewHolder {
             TextView friend_item;
-            Button removeFriend;
+            Button showProfile, removeFriend;
 
         }
 
@@ -145,6 +145,7 @@ public class ShowFriendsFragment extends Fragment {
 
                 holder.friend_item = (TextView) convertView
                         .findViewById(R.id.friend_item);
+                holder.showProfile = (Button) convertView.findViewById(R.id.showProfile);
                 holder.removeFriend = (Button) convertView.findViewById(R.id.removeFriendButton);
 
                 convertView.setTag(holder);
@@ -154,6 +155,16 @@ public class ShowFriendsFragment extends Fragment {
 
             // Setting all values in listview
             holder.friend_item.setText(resultList.get(position));
+            holder.showProfile.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ProfileFragment.setUserName(resultList.get(position));
+                    getFragmentManager().beginTransaction()
+                            .addToBackStack("")
+                            .replace(R.id.container,ProfileFragment.newInstance(""))
+                            .commit();
+                }
+            });
             holder.removeFriend.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

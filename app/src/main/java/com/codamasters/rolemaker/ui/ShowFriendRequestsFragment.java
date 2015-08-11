@@ -17,7 +17,6 @@ import android.widget.TextView;
 import com.codamasters.rolemaker.R;
 import com.codamasters.rolemaker.controller.GcmAcceptFriendRequestAsyncTask;
 import com.codamasters.rolemaker.controller.GcmDenyFriendRequestAsyncTask;
-import com.codamasters.rolemaker.controller.GcmRemoveFriendAsyncTask;
 import com.codamasters.rolemaker.controller.GcmShowFriendRequestsAsyncTask;
 
 import java.util.ArrayList;
@@ -107,6 +106,7 @@ public class ShowFriendRequestsFragment extends Fragment {
 
         class ViewHolder {
             TextView received_item;
+            Button showProfile;
             Button acceptFriendButton;
             Button denyFriendButton;
 
@@ -160,6 +160,7 @@ public class ShowFriendRequestsFragment extends Fragment {
 
                 holder.received_item = (TextView) convertView
                         .findViewById(R.id.received_item);
+                holder.showProfile = (Button) convertView.findViewById(R.id.showProfile);
                 holder.acceptFriendButton = (Button) convertView.findViewById(R.id.acceptFriendButton);
                 holder.denyFriendButton = (Button) convertView.findViewById(R.id.denyFriendButton);
 
@@ -170,6 +171,16 @@ public class ShowFriendRequestsFragment extends Fragment {
 
             // Setting all values in listview
             holder.received_item.setText(receivedFriendNamesS.get(position));
+            holder.showProfile.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ProfileFragment.setUserName(receivedFriendNamesS.get(position));
+                    getFragmentManager().beginTransaction()
+                            .addToBackStack("")
+                            .replace(R.id.container,ProfileFragment.newInstance(""))
+                            .commit();
+                }
+            });
 
             holder.acceptFriendButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -201,6 +212,7 @@ public class ShowFriendRequestsFragment extends Fragment {
 
         class ViewHolder {
             TextView sent_item;
+            Button showProfile;
         }
 
         private static final String TAG = "CustomAdapter";
@@ -251,6 +263,7 @@ public class ShowFriendRequestsFragment extends Fragment {
 
                 holder.sent_item = (TextView) convertView
                         .findViewById(R.id.sent_item);
+                holder.showProfile = (Button) convertView.findViewById(R.id.showProfile);
 
                 convertView.setTag(holder);
 
@@ -259,6 +272,16 @@ public class ShowFriendRequestsFragment extends Fragment {
 
             // Setting all values in listview
             holder.sent_item.setText(sentFriendNamesS.get(position));
+            holder.showProfile.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ProfileFragment.setUserName(sentFriendNamesS.get(position));
+                    getFragmentManager().beginTransaction()
+                            .addToBackStack("")
+                            .replace(R.id.container,ProfileFragment.newInstance(""))
+                            .commit();
+                }
+            });
 
             return convertView;
         }
