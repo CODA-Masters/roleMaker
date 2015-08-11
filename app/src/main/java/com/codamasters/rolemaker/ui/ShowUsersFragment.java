@@ -150,7 +150,7 @@ public class ShowUsersFragment extends Fragment {
 
         class ViewHolder {
             TextView user_item;
-            Button addFriend;
+            Button showProfile, addFriend;
 
         }
 
@@ -202,6 +202,7 @@ public class ShowUsersFragment extends Fragment {
 
                 holder.user_item = (TextView) convertView
                         .findViewById(R.id.user_item);
+                holder.showProfile = (Button) convertView.findViewById(R.id.showProfile);
                 holder.addFriend = (Button) convertView.findViewById(R.id.addFriendButton);
 
                 convertView.setTag(holder);
@@ -211,6 +212,17 @@ public class ShowUsersFragment extends Fragment {
 
             // Setting all values in listview
             holder.user_item.setText(resultList.get(position));
+
+            holder.showProfile.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ProfileFragment.setUserName(resultList.get(position));
+                    getFragmentManager().beginTransaction()
+                            .addToBackStack("")
+                            .replace(R.id.container,ProfileFragment.newInstance(""))
+                            .commit();
+                }
+            });
 
             if(friendIDs.contains(userIDs.get(position))) {
                 holder.addFriend.setText("Friend already added");
