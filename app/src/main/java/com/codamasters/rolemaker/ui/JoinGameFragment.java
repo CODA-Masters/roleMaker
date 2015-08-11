@@ -1,5 +1,6 @@
 package com.codamasters.rolemaker.ui;
 
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -35,7 +36,7 @@ public class JoinGameFragment extends Fragment {
     private static ArrayList<HashMap<String, String> > resultList;  // Array que almacena los registros de partidas
     // Cada registro de partida está representado por un Hashmap que incluye los distintos campos del mismo.
 
-    private static boolean joined;
+    private static ArrayList<Boolean> joinedList;
     private static String userID;
 
     private static PostAdapter adapter;
@@ -65,13 +66,13 @@ public class JoinGameFragment extends Fragment {
         lv = (ListView) rootView.findViewById(R.id.gameList);
         resultList = new ArrayList<HashMap<String, String>>();
 
+        joinedList = new ArrayList<>();
 
         adapter = new PostAdapter(getActivity());
 
         lv.setAdapter(adapter);
 
         userID = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("user", "nothing");
-        joined = false;
 
         new GcmShowGamesAsyncTask(getActivity()).execute();
 
@@ -80,6 +81,7 @@ public class JoinGameFragment extends Fragment {
 
     public static void setGameList(ArrayList<GameRecord> gameList){
         for (GameRecord game: gameList){
+            boolean joined = false;
             HashMap<String, String> aux = new HashMap<>();
 
             aux.put("gameID",game.getId().toString());
@@ -89,6 +91,7 @@ public class JoinGameFragment extends Fragment {
             aux.put("maxPlayers",game.getMaxPlayers().toString());
             aux.put("description",game.getDescription());
             aux.put("style", game.getStyle());
+            aux.put("pendingPlayers",game.getPendingPlayers());
 
             JSONParser parser=new JSONParser();
             String s = game.getPendingPlayers();
@@ -99,6 +102,7 @@ public class JoinGameFragment extends Fragment {
                 for(int i = 0; i < array.size(); i++){
                     if(array.get(i).toString().equals(userID)){
                         joined = true;
+                        joinedList.add(true);
                         break;
                     }
                 }
@@ -106,11 +110,25 @@ public class JoinGameFragment extends Fragment {
                 e.printStackTrace();
             }
 
+            if(!joined){
+                joinedList.add(false);
+            }
+
             resultList.add(aux);
 
         }
 
         adapter.notifyDataSetChanged();
+    }
+
+    public void updateList(){
+
+        Fragment frg = null;
+        frg = this;
+        final android.support.v4.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.detach(frg);
+        ft.attach(frg);
+        ft.commit();
     }
 
 
@@ -169,7 +187,7 @@ public class JoinGameFragment extends Fragment {
                     + ((convertView == null) ? "null" : "being recycled"));
 
             if (convertView == null) {
-                if(!joined) {
+                if(!joinedList.get(position)) {
                     convertView = inflater.inflate(R.layout.game_list_item, null);
                 }
                 else{
@@ -202,16 +220,16 @@ public class JoinGameFragment extends Fragment {
             "/"+resultList.get(position).get("maxPlayers"));
             holder.game_style.setText(resultList.get(position).get("style"));
             holder.description.setText(resultList.get(position).get("description"));
-            if(!joined) {
+            if(!joinedList.get(position)) {
                 holder.joinButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         new GcmJoinGameAsyncTask(getActivity(), resultList.get(position).get("gameID")).execute();
+                        updateList();
                     }
                 });
             }
 
-            joined = false;
 
             return convertView;
         }

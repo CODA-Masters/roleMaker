@@ -81,10 +81,14 @@ public class ShowFriendsFragment extends Fragment {
         adapter.notifyDataSetChanged();
     }
 
-    private void updateFriends(String friendName, String friendID){
-        resultList.remove(friendName);
-        friendsIdsList.remove(friendID);
-        adapter.notifyDataSetChanged();
+    private void updateFriends(){
+
+        Fragment frg = null;
+        frg = this;
+        final android.support.v4.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.detach(frg);
+        ft.attach(frg);
+        ft.commit();
     }
 
 
@@ -170,7 +174,7 @@ public class ShowFriendsFragment extends Fragment {
                 public void onClick(View v) {
                     String friendID = friendsIdsList.get(position);
                     new GcmRemoveFriendAsyncTask(getActivity(), friendID).execute();
-                    updateFriends(resultList.get(position), friendID);
+                    updateFriends();
                 }
             });
 

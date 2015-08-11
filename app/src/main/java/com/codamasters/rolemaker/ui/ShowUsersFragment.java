@@ -142,6 +142,16 @@ public class ShowUsersFragment extends Fragment {
         return userList;
     }
 
+    private void updateFriends(){
+
+        Fragment frg = null;
+        frg = this;
+        final android.support.v4.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.detach(frg);
+        ft.attach(frg);
+        ft.commit();
+    }
+
 
     /**
      * @author Alexito
@@ -243,6 +253,7 @@ public class ShowUsersFragment extends Fragment {
                         ArrayList<UserRecord> userList = ShowUsersFragment.getUserList();
                         String friendID = userList.get(position).getId() + "";
                         new GcmAddFriendAsyncTask(getActivity(), friendID).execute();
+                        updateFriends();
                     }
                 });
             }
