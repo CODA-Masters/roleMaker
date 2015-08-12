@@ -428,4 +428,13 @@ public class RegistrationEndpoint {
             ofy().save().entity(game).now();
         }
     }
+
+    @ApiMethod(name = "listMyGames")
+    public CollectionResponse<GameRecord> listMyGames(@Named("userID") String userID){
+        List<GameRecord> games = ofy().load().type(GameRecord.class).filter("master", userID).list();
+        for(GameRecord game : games){
+            game.setMaster(findRecord(Long.parseLong(game.getMaster())).getName());
+        }
+        return CollectionResponse.<GameRecord>builder().setItems(games).build();
+    }
 }
