@@ -82,6 +82,8 @@ public class MyGamesFragment extends Fragment {
             aux.put("maxPlayers",game.getMaxPlayers().toString());
             aux.put("description",game.getDescription());
             aux.put("style", game.getStyle());
+            aux.put("pendingPlayers",game.getPendingPlayers());
+            aux.put("players",game.getPlayers());
 
             resultList.add(aux);
 
@@ -186,6 +188,15 @@ public class MyGamesFragment extends Fragment {
             "/"+resultList.get(position).get("maxPlayers"));
             holder.game_style.setText(resultList.get(position).get("style"));
             holder.description.setText(resultList.get(position).get("description"));
+            holder.manageButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getFragmentManager().beginTransaction()
+                            .addToBackStack("")
+                            .replace(R.id.container, ManageGameFragment.newInstance("",resultList.get(position)))
+                            .commit();
+                }
+            });
 
 
             return convertView;

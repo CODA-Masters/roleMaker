@@ -34,4 +34,19 @@
         android:layout_weight="1"
         android:layout_height="1dp"/>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Invite New Player"
+        android:id="@+id/bInvitePlayer"
+        android:layout_weight="0" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Players: 1/10"
+        android:id="@+id/tvNumPlayers"
+        android:textSize="@dimen/abc_text_size_large_material"
+        android:layout_weight="0" />
+
 </LinearLayout>
