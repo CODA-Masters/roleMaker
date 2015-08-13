@@ -437,4 +437,10 @@ public class RegistrationEndpoint {
         }
         return CollectionResponse.<GameRecord>builder().setItems(games).build();
     }
+
+    @ApiMethod(name = "findPartida")
+    public GameRecord findPartida(@Named("gameID") String gameID){
+        GameRecord game = findGame(Long.parseLong(gameID));
+        return game;
+    }
 }
