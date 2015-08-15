@@ -13,13 +13,12 @@ import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
 
-import org.json.simple.JSONObject;
+import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
-import java.io.StringWriter;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -78,6 +77,43 @@ public class MessagingEndpoint {
         }
     }
 
+    @ApiMethod(name = "sendTextToUsers")
+    public void sendTextToUsers(@Named("message") String message, @Named("userIds") String userIds) throws IOException, ParseException {
+        if (message == null || message.trim().length() == 0) {
+            log.warning("Not sending message because it is empty");
+            return;
+        }
+
+        Sender sender = new Sender(API_KEY);
+        Message msg = new Message.Builder().addData("message", message).build();
+
+        // Parseamos el String y obtenemos los IDS y con ello los usuarios
+
+        JSONParser parser=new JSONParser();
+        ArrayList<UserRecord> records = new ArrayList<>();
+        try {
+            Object obj = parser.parse(userIds);
+            JSONArray array = (JSONArray) obj;
+
+
+            // Recorremos el array y obtenemos el objter USER de cada nombre de usuario
+            // y así accedemos a su GCM_ID para enviarles el mensaje
+
+            // Luego en la funcion GCMReceiveMessage ya insertamos cada mensaje en el usuario y partida correspondiente
+
+        } catch (org.json.simple.parser.ParseException e) {
+            e.printStackTrace();
+        }
+
+
+
+
+        for (UserRecord record : records) {
+
+            Result result = sender.send(msg, record.getRegId(), 1);
+        }
+    }
+
     private UserRecord findRecord(Long id) {
         return ofy().load().type(UserRecord.class).filter("id", id).first().now();
     }
@@ -118,4 +154,5 @@ public class MessagingEndpoint {
             }
         }
     }
+
 }

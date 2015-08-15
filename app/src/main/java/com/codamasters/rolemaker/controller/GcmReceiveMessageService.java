@@ -28,11 +28,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-public class GcmIntentService extends IntentService {
+public class GcmReceiveMessageService extends IntentService {
 
     private static int num_messages=0;
 
-    public GcmIntentService() {
+    public GcmReceiveMessageService() {
         super("GcmIntentService");
     }
 
@@ -65,6 +65,11 @@ public class GcmIntentService extends IntentService {
                 }
                 else{
 
+                    // COMPROBAR SI EL MENSAJE RECIBIDO CORRESPONDE CON TU NOMBRE DE USUARIO
+                    // SINO SE GUARDA EN EL NOMBRES CORRESPONDIENTE
+
+                    // LA ETIQUETA SHARED_MESSAGES AHORA ES EL NOMBRE DE USUARIO Y/O LA PARTIDA ABIERTA
+
                     SharedPreferences prefs = getSharedPreferences("SHARED_MESSAGES", Context.MODE_PRIVATE);
 
                     Gson gson = new Gson();
@@ -95,12 +100,12 @@ public class GcmIntentService extends IntentService {
         Intent notificationIntent = new Intent(this,LoggedActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        notification.setLatestEventInfo(GcmIntentService.this, notificationTitle,notificationMessage, pendingIntent);
+        notification.setLatestEventInfo(GcmReceiveMessageService.this, notificationTitle,notificationMessage, pendingIntent);
         notificationManager.notify(9999, notification);
     }
 
     public static void setNum_messages(int num_messages) {
-        GcmIntentService.num_messages = num_messages;
+        GcmReceiveMessageService.num_messages = num_messages;
     }
 
 }

@@ -116,4 +116,11 @@
         android:layout_height="wrap_content"
         android:text="Delete Game"
         android:id="@+id/bDeleteGame" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Open Chat"
+        android:id="@+id/bOpenChat" />
+
 </LinearLayout>
