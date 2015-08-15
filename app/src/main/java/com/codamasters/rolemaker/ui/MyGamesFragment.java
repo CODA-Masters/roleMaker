@@ -72,6 +72,9 @@ public class MyGamesFragment extends Fragment {
     }
 
     public static void setGameList(ArrayList<GameRecord> gameList){
+        if(gameList == null){
+            return;
+        }
         for (GameRecord game: gameList){
             HashMap<String, String> aux = new HashMap<>();
 

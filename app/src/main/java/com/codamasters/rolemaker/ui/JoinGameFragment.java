@@ -1,6 +1,5 @@
 package com.codamasters.rolemaker.ui;
 
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -36,7 +35,7 @@ public class JoinGameFragment extends Fragment {
     private static ArrayList<HashMap<String, String> > resultList;  // Array que almacena los registros de partidas
     // Cada registro de partida está representado por un Hashmap que incluye los distintos campos del mismo.
 
-    private static ArrayList<Boolean> joinedList;
+    private static ArrayList<Boolean> requestSentList, joinedList;
     private static String userID;
 
     private static PostAdapter adapter;
@@ -66,6 +65,7 @@ public class JoinGameFragment extends Fragment {
         lv = (ListView) rootView.findViewById(R.id.gameList);
         resultList = new ArrayList<HashMap<String, String>>();
 
+        requestSentList = new ArrayList<>();
         joinedList = new ArrayList<>();
 
         adapter = new PostAdapter(getActivity());
@@ -81,6 +81,7 @@ public class JoinGameFragment extends Fragment {
 
     public static void setGameList(ArrayList<GameRecord> gameList){
         for (GameRecord game: gameList){
+            boolean requestSent = false;
             boolean joined = false;
             HashMap<String, String> aux = new HashMap<>();
 
@@ -101,6 +102,22 @@ public class JoinGameFragment extends Fragment {
                 JSONArray array = (JSONArray) obj;
                 for(int i = 0; i < array.size(); i++){
                     if(array.get(i).toString().equals(userID)){
+                        requestSent = true;
+                        requestSentList.add(true);
+                        break;
+                    }
+                }
+            } catch (org.json.simple.parser.ParseException e) {
+                e.printStackTrace();
+            }
+
+            s = game.getPlayers();
+
+            try {
+                Object obj = parser.parse(s);
+                JSONArray array = (JSONArray) obj;
+                for(int i = 0; i < array.size(); i++){
+                    if(array.get(i).toString().equals(userID)){
                         joined = true;
                         joinedList.add(true);
                         break;
@@ -108,6 +125,10 @@ public class JoinGameFragment extends Fragment {
                 }
             } catch (org.json.simple.parser.ParseException e) {
                 e.printStackTrace();
+            }
+
+            if(!requestSent){
+                requestSentList.add(false);
             }
 
             if(!joined){
@@ -187,12 +208,8 @@ public class JoinGameFragment extends Fragment {
                     + ((convertView == null) ? "null" : "being recycled"));
 
             if (convertView == null) {
-                if(!joinedList.get(position)) {
-                    convertView = inflater.inflate(R.layout.game_list_item, null);
-                }
-                else{
-                    convertView = inflater.inflate(R.layout.game_list_joined_item, null);
-                }
+
+                convertView = inflater.inflate(R.layout.game_list_item, null);
 
                 holder = new ViewHolder();
 
@@ -208,6 +225,18 @@ public class JoinGameFragment extends Fragment {
                         .findViewById(R.id.game_style);
                 holder.joinButton = (Button) convertView.findViewById(R.id.joinButton);
 
+                if(requestSentList.get(position)) {
+                    holder.joinButton.setText("Join request sent");
+                    holder.joinButton.setEnabled(false);
+
+                }
+
+                else if(joinedList.get(position)) {
+                    holder.joinButton.setText("Already joined");
+                    holder.joinButton.setEnabled(false);
+
+                }
+
                 convertView.setTag(holder);
 
             } else
@@ -218,9 +247,9 @@ public class JoinGameFragment extends Fragment {
             holder.master_name.setText(resultList.get(position).get("master"));
             holder.num_players.setText(resultList.get(position).get("numPlayers")+
             "/"+resultList.get(position).get("maxPlayers"));
-            holder.game_style.setText(resultList.get(position).get("style"));
-            holder.description.setText(resultList.get(position).get("description"));
-            if(!joinedList.get(position)) {
+                holder.game_style.setText(resultList.get(position).get("style"));
+                holder.description.setText(resultList.get(position).get("description"));
+            if(!requestSentList.get(position)) {
                 holder.joinButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

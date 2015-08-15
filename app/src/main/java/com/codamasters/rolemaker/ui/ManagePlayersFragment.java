@@ -17,6 +17,7 @@ import com.codamasters.rolemaker.controller.GcmAcceptFriendRequestAsyncTask;
 import com.codamasters.rolemaker.controller.GcmAcceptPlayerAsyncTask;
 import com.codamasters.rolemaker.controller.GcmDenyFriendRequestAsyncTask;
 import com.codamasters.rolemaker.controller.GcmDenyPlayerAsyncTask;
+import com.codamasters.rolemaker.controller.GcmKickPlayerAsyncTask;
 import com.codamasters.rolemaker.controller.GcmShowPlayersAsyncTask;
 
 import org.json.simple.JSONArray;
@@ -299,7 +300,10 @@ public class ManagePlayersFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     String playerID = playerIDs.get(position);
-                    //new GcmDenyPlayerRequestAsyncTask(getActivity(), friendID).execute();
+                    new GcmKickPlayerAsyncTask(getActivity(), game.get("gameID"), playerID).execute();
+                    int n = Integer.parseInt(game.get("numPlayers")) - 1;
+                    game.put("numPlayers", n + "");
+                    updateList();
                 }
             });
 

@@ -6,9 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.codamasters.rolemaker.R;
+import com.codamasters.rolemaker.controller.GcmDeleteGameAsyncTask;
 
 import java.util.HashMap;
 
@@ -23,6 +26,10 @@ public class ManageGameFragment extends Fragment {
     private static Button bManagePlayers, bDeleteGame;
     private static HashMap<String, String> game;
     private static String userName = "";
+    PopupWindow popupMessage;
+    LinearLayout layoutOfPopup;
+    Button insidePopupButton, cancelButton;
+    TextView popupText;
 
 
     public static ManageGameFragment newInstance(String param1, HashMap<String, String> g) {
@@ -54,6 +61,7 @@ public class ManageGameFragment extends Fragment {
         bManagePlayers = (Button) rootView.findViewById(R.id.bManagePlayers);
         bDeleteGame = (Button) rootView.findViewById(R.id.bDeleteGame);
 
+        initPopUp();
         loadGame();
         return rootView;
     }
@@ -70,15 +78,64 @@ public class ManageGameFragment extends Fragment {
             public void onClick(View v) {
                 getFragmentManager().beginTransaction()
                         .addToBackStack("")
-                        .replace(R.id.container, ManagePlayersFragment.newInstance("",game))
+                        .replace(R.id.container, ManagePlayersFragment.newInstance("", game))
                         .commit();
             }
         });
         bDeleteGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(!popupMessage.isShowing()) {
+                    popupMessage.showAsDropDown(bDeleteGame, 0, 0);
+                }
+                else{
+                    popupMessage.dismiss();
+                }
+            }
+        });
 
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupMessage.dismiss();
+            }
+        });
+        insidePopupButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new GcmDeleteGameAsyncTask(getActivity(), game.get("gameID")).execute();
+                popupMessage.dismiss();
+                updateList();
+                getFragmentManager().popBackStack();
             }
         });
     }
+
+    private void updateList(){
+        Fragment frg = null;
+        frg = this;
+        final android.support.v4.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.detach(frg);
+        ft.attach(frg);
+        ft.commit();
+    }
+
+    private void initPopUp(){
+        popupText = new TextView(getActivity());
+        insidePopupButton = new Button(getActivity());
+        cancelButton = new Button(getActivity());
+        layoutOfPopup = new LinearLayout(getActivity());
+        insidePopupButton.setText("YES");
+        cancelButton.setText("NO");
+        popupText.setText("Are you sure you want to delete this game?");
+        popupText.setPadding(0, 0, 0, 20); layoutOfPopup.setOrientation(LinearLayout.VERTICAL);
+        layoutOfPopup.addView(popupText);
+        layoutOfPopup.addView(insidePopupButton);
+        layoutOfPopup.addView(cancelButton);
+
+        popupMessage = new PopupWindow(layoutOfPopup, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        popupMessage.setContentView(layoutOfPopup);
+
+    }
+
 }

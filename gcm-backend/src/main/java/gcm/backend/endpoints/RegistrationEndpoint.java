@@ -503,4 +503,33 @@ public class RegistrationEndpoint {
         }
 
     }
+
+    @ApiMethod(name = "kickPlayer")
+    public void kickPlayer(@Named("gameID") String gameID, @Named("playerID") String playerID) {
+        GameRecord game = findGame(Long.parseLong(gameID));
+
+        JSONParser parser=new JSONParser();
+        String s = game.getPlayers();
+        try {
+            Object obj = parser.parse(s);
+            JSONArray array = (JSONArray) obj;
+            array.remove(playerID);
+            s = array.toJSONString();
+        } catch (org.json.simple.parser.ParseException e) {
+            e.printStackTrace();
+        }
+        game.setPlayers(s);
+        game.setNumPlayers(game.getNumPlayers() - 1);
+
+        if(game != null) {
+            ofy().save().entity(game).now();
+        }
+
+    }
+
+    @ApiMethod(name = "deleteGame")
+    public void deleteGame(@Named("gameID") String gameID) {
+        GameRecord game = findGame(Long.parseLong(gameID));
+        ofy().delete().entity(game);
+    }
 }

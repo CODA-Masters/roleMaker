@@ -17,6 +17,7 @@ import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.codamasters.rolemaker.R;
 import com.codamasters.rolemaker.controller.GcmCreateGameAsyncTask;
@@ -69,6 +70,12 @@ public class CreateGameFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
+                if(etGameName.getText().toString().matches("") || etMaxPlayers.getText().toString().matches("")
+                        || etDescription.getText().toString().matches("")){
+                    Toast.makeText(getActivity(),"Please, complete all fields", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 // get selected radio button from radioGroup
                 int selectedId = rgStyle.getCheckedRadioButtonId();
 
@@ -77,6 +84,8 @@ public class CreateGameFragment extends Fragment {
 
                 new GcmCreateGameAsyncTask(getActivity(),etGameName.getText().toString(),Integer.parseInt(etMaxPlayers.getText().toString()),
                         etDescription.getText().toString(), rbStyle.getText().toString()).execute();
+
+                getFragmentManager().popBackStack();
             }
         });
 
