@@ -443,4 +443,64 @@ public class RegistrationEndpoint {
         GameRecord game = findGame(Long.parseLong(gameID));
         return game;
     }
+
+    @ApiMethod(name = "acceptPlayer")
+    public void acceptPlayer(@Named("gameID") String gameID, @Named("playerID") String playerID){
+        GameRecord game = findGame(Long.parseLong(gameID));
+
+        if(game.getNumPlayers() > game.getMaxPlayers()){
+            return;
+        }
+
+        JSONParser parser=new JSONParser();
+        String s = game.getPlayers();
+        try {
+            Object obj = parser.parse(s);
+            JSONArray array = (JSONArray) obj;
+            array.add(playerID);
+            s = array.toJSONString();
+        } catch (org.json.simple.parser.ParseException e) {
+            e.printStackTrace();
+        }
+        game.setPlayers(s);
+        game.setNumPlayers(game.getNumPlayers()+1);
+
+        s = game.getPendingPlayers();
+        try {
+            Object obj = parser.parse(s);
+            JSONArray array = (JSONArray) obj;
+            array.remove(playerID);
+            s = array.toJSONString();
+        } catch (org.json.simple.parser.ParseException e) {
+            e.printStackTrace();
+        }
+        game.setPendingPlayers(s);
+
+        if(game != null) {
+            ofy().save().entity(game).now();
+        }
+
+    }
+
+    @ApiMethod(name = "denyPlayer")
+    public void denyPlayer(@Named("gameID") String gameID, @Named("playerID") String playerID) {
+        GameRecord game = findGame(Long.parseLong(gameID));
+
+        JSONParser parser=new JSONParser();
+        String s = game.getPendingPlayers();
+        try {
+            Object obj = parser.parse(s);
+            JSONArray array = (JSONArray) obj;
+            array.remove(playerID);
+            s = array.toJSONString();
+        } catch (org.json.simple.parser.ParseException e) {
+            e.printStackTrace();
+        }
+        game.setPendingPlayers(s);
+
+        if(game != null) {
+            ofy().save().entity(game).now();
+        }
+
+    }
 }

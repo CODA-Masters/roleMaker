@@ -14,7 +14,9 @@ import android.widget.TextView;
 
 import com.codamasters.rolemaker.R;
 import com.codamasters.rolemaker.controller.GcmAcceptFriendRequestAsyncTask;
+import com.codamasters.rolemaker.controller.GcmAcceptPlayerAsyncTask;
 import com.codamasters.rolemaker.controller.GcmDenyFriendRequestAsyncTask;
+import com.codamasters.rolemaker.controller.GcmDenyPlayerAsyncTask;
 import com.codamasters.rolemaker.controller.GcmShowPlayersAsyncTask;
 
 import org.json.simple.JSONArray;
@@ -105,6 +107,14 @@ public class ManagePlayersFragment extends Fragment {
         adapter2.notifyDataSetChanged();
     }
 
+    private void updateList(){
+        Fragment frg = null;
+        frg = this;
+        final android.support.v4.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.detach(frg);
+        ft.attach(frg);
+        ft.commit();
+    }
 
     public class PendingPostAdapter extends BaseAdapter {
 
@@ -189,14 +199,18 @@ public class ManagePlayersFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     String playerID = pendingPlayerIDs.get(position);
-                    //new GcmAcceptPlayerRequestAsyncTask(getActivity(), friendID).execute();
+                    new GcmAcceptPlayerAsyncTask(getActivity(), game.get("gameID"), playerID).execute();
+                    int n = Integer.parseInt(game.get("numPlayers")) + 1;
+                    game.put("numPlayers", n+"");
+                    updateList();
                 }
             });
             holder.denyPlayerButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     String playerID = pendingPlayerIDs.get(position);
-                    //new GcmDenyPlayerRequestAsyncTask(getActivity(), friendID).execute();
+                    new GcmDenyPlayerAsyncTask(getActivity(), game.get("gameID"), playerID).execute();
+                    updateList();
                 }
             });
 
