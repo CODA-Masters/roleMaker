@@ -14,6 +14,7 @@ import com.google.api.server.spi.response.CollectionResponse;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -402,9 +403,6 @@ public class RegistrationEndpoint {
     @ApiMethod(name = "listGames")
     public CollectionResponse<GameRecord> listGames(){
         List<GameRecord> games = ofy().load().type(GameRecord.class).list();
-        for(GameRecord game : games){
-            game.setMaster(findRecord(Long.parseLong(game.getMaster())).getName());
-        }
         return CollectionResponse.<GameRecord>builder().setItems(games).build();
     }
 
@@ -429,12 +427,37 @@ public class RegistrationEndpoint {
         }
     }
 
+    // Se listan los juegos en los que el usuario participa como master o jugador
     @ApiMethod(name = "listMyGames")
     public CollectionResponse<GameRecord> listMyGames(@Named("userID") String userID){
-        List<GameRecord> games = ofy().load().type(GameRecord.class).filter("master", userID).list();
-        for(GameRecord game : games){
-            game.setMaster(findRecord(Long.parseLong(game.getMaster())).getName());
+        List<GameRecord> masterGames = ofy().load().type(GameRecord.class).filter("master", userID).list();
+        List<GameRecord> allGames = ofy().load().type(GameRecord.class).list();
+        List<GameRecord> games = new ArrayList<>();
+
+        for(GameRecord game : masterGames){
+            games.add(game);
         }
+
+        JSONParser parser=new JSONParser();
+        String s = "";
+
+        for(GameRecord game : allGames){
+
+            s = game.getPlayers();
+            try {
+                Object obj = parser.parse(s);
+                JSONArray array = (JSONArray) obj;
+                for(int i = 0; i < array.size(); i++){
+                    if(array.get(i).toString().equals(userID)){
+                        games.add(game);
+                        break;
+                    }
+                }
+            } catch (org.json.simple.parser.ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
         return CollectionResponse.<GameRecord>builder().setItems(games).build();
     }
 

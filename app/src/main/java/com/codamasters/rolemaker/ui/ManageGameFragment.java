@@ -13,6 +13,10 @@ import android.widget.TextView;
 import com.codamasters.rolemaker.R;
 import com.codamasters.rolemaker.controller.GcmDeleteGameAsyncTask;
 
+import org.json.simple.JSONArray;
+import org.json.simple.parser.JSONParser;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 
 
@@ -23,9 +27,10 @@ public class ManageGameFragment extends Fragment {
 
     private static final String ARG_PARAM = "param1";
     private static TextView game_name, master_name, num_players, description, game_style;
-    private static Button bManagePlayers, bDeleteGame;
+    private static Button bManagePlayers, bDeleteGame, bOpenChat;
     private static HashMap<String, String> game;
     private static String userName = "";
+    private static ArrayList<String> participantIDs;
     PopupWindow popupMessage;
     LinearLayout layoutOfPopup;
     Button insidePopupButton, cancelButton;
@@ -60,6 +65,7 @@ public class ManageGameFragment extends Fragment {
         game_style = (TextView) rootView.findViewById(R.id.game_style);
         bManagePlayers = (Button) rootView.findViewById(R.id.bManagePlayers);
         bDeleteGame = (Button) rootView.findViewById(R.id.bDeleteGame);
+        bOpenChat = (Button) rootView.findViewById(R.id.bOpenChat);
 
         initPopUp();
         loadGame();
@@ -72,6 +78,32 @@ public class ManageGameFragment extends Fragment {
         num_players.setText(game.get("numPlayers") + "/" + game.get("maxPlayers"));
         description.setText(game.get("description"));
         game_style.setText(game.get("style"));
+
+        participantIDs = new ArrayList<>();
+        participantIDs.add(game.get("master"));
+
+        JSONParser parser=new JSONParser();
+        String s = game.get("players");
+        try {
+            Object obj = parser.parse(s);
+            JSONArray array = (JSONArray) obj;
+            for(int i = 0; i < array.size(); i++){
+                participantIDs.add(array.get(i).toString());
+            }
+        } catch (org.json.simple.parser.ParseException e) {
+            e.printStackTrace();
+        }
+
+
+        bOpenChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getFragmentManager().beginTransaction()
+                        .addToBackStack("")
+                        .replace(R.id.container, ChatFragment2.newInstance("", participantIDs,game.get("gameID")))
+                        .commit();
+            }
+        });
 
         bManagePlayers.setOnClickListener(new View.OnClickListener() {
             @Override

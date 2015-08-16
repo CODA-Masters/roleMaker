@@ -17,6 +17,7 @@ import android.os.Looper;
 
 import com.codamasters.rolemaker.R;
 import com.codamasters.rolemaker.ui.ChatFragment;
+import com.codamasters.rolemaker.ui.ChatFragment2;
 import com.codamasters.rolemaker.ui.LoggedActivity;
 import com.codamasters.rolemaker.utils.MensajeChat;
 import com.codamasters.rolemaker.utils.Parseador;
@@ -31,9 +32,11 @@ import java.util.logging.Logger;
 public class GcmReceiveMessageService extends IntentService {
 
     private static int num_messages=0;
+    private static String gameID;
 
-    public GcmReceiveMessageService() {
-        super("GcmIntentService");
+    public GcmReceiveMessageService(String gID) {
+        super("GcmReceiveMessageService");
+        gameID = gID;
     }
 
     @Override
@@ -49,7 +52,7 @@ public class GcmReceiveMessageService extends IntentService {
             if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
                 Logger.getLogger("GCM_RECEIVED").log(Level.INFO, extras.toString());
 
-                addText(extras.getString("message"));
+                addText(extras.getString("message"+gameID));
             }
         }
         GcmBroadcastReceiver.completeWakefulIntent(intent);
@@ -60,21 +63,21 @@ public class GcmReceiveMessageService extends IntentService {
 
             @Override
             public void run() {
-                if(ChatFragment.isOpen()) {
-                    ChatFragment.updateMessages(message);
+                if(ChatFragment2.isOpen()) {
+                    ChatFragment2.updateMessages(message);
                 }
                 else{
 
                     // COMPROBAR SI EL MENSAJE RECIBIDO CORRESPONDE CON TU NOMBRE DE USUARIO
                     // SINO SE GUARDA EN EL NOMBRES CORRESPONDIENTE
 
-                    // LA ETIQUETA SHARED_MESSAGES AHORA ES EL NOMBRE DE USUARIO Y/O LA PARTIDA ABIERTA
+                    // LA ETIQUETA SHARED_MESSAGES AHORA ES EL ID DE USUARIO Y/O LA PARTIDA ABIERTA
 
-                    SharedPreferences prefs = getSharedPreferences("SHARED_MESSAGES", Context.MODE_PRIVATE);
+                    SharedPreferences prefs = getSharedPreferences("SHARED_MESSAGES"+gameID, Context.MODE_PRIVATE);
 
                     Gson gson = new Gson();
 
-                    String json = prefs.getString("messages", "");
+                    String json = prefs.getString("messages"+gameID, "");
                     ArrayList<MensajeChat> resultList = (ArrayList<MensajeChat>) gson.fromJson(json, ArrayList.class);
                     MensajeChat aux = Parseador.parsearMensaje(message);
                     resultList.add(aux);

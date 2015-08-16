@@ -73,7 +73,7 @@ public class MessagingEndpoint {
 
             // Función send --> Parámetros : mensaje, ID del usuario, número de intentos de envio
 
-            Result result = sender.send(msg, record.getRegId(), 1);
+            Result result = sender.send(msg, record.getRegId(), 5);
         }
     }
 
@@ -89,28 +89,29 @@ public class MessagingEndpoint {
 
         // Parseamos el String y obtenemos los IDS y con ello los usuarios
 
+        ArrayList<UserRecord> users = new ArrayList<>();
+
+        // Recorremos el array y obtenemos el objter USER de cada nombre de usuario
+
         JSONParser parser=new JSONParser();
-        ArrayList<UserRecord> records = new ArrayList<>();
+        String s = userIds;
         try {
-            Object obj = parser.parse(userIds);
+            Object obj = parser.parse(s);
             JSONArray array = (JSONArray) obj;
-
-
-            // Recorremos el array y obtenemos el objter USER de cada nombre de usuario
-            // y así accedemos a su GCM_ID para enviarles el mensaje
-
-            // Luego en la funcion GCMReceiveMessage ya insertamos cada mensaje en el usuario y partida correspondiente
-
+            for(int i = 0; i < array.size(); i++){
+                users.add(findRecord(Long.parseLong(array.get(i).toString())));
+            }
         } catch (org.json.simple.parser.ParseException e) {
             e.printStackTrace();
         }
 
+        // y así accedemos a su GCM_ID para enviarles el mensaje
 
+        // Luego en la funcion GCMReceiveMessage ya insertamos cada mensaje en el usuario y partida correspondiente
 
+        for (UserRecord user : users) {
 
-        for (UserRecord record : records) {
-
-            Result result = sender.send(msg, record.getRegId(), 1);
+            sender.send(msg, user.getRegId(), 5);
         }
     }
 
