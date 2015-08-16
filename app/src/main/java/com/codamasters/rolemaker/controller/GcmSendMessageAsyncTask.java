@@ -2,7 +2,6 @@ package com.codamasters.rolemaker.controller;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.util.Log;
 
 import com.codamasters.rolemaker.utils.Constants;
@@ -82,6 +81,7 @@ public class GcmSendMessageAsyncTask extends AsyncTask<Context, Void, String> {
                     array.add(userIds.get(i));
                 }
                 String userIDsJson = array.toJSONString();;
+                Log.d("ALL USERS", userIDsJson);
                 mesService.sendTextToUsers(message, userIDsJson).execute();
             } catch (org.json.simple.parser.ParseException e) {
                 e.printStackTrace();

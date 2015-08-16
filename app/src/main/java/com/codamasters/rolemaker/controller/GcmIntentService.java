@@ -14,9 +14,10 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import com.codamasters.rolemaker.R;
-import com.codamasters.rolemaker.ui.ChatFragment;
+import com.codamasters.rolemaker.ui.ChatFragment2;
 import com.codamasters.rolemaker.ui.LoggedActivity;
 import com.codamasters.rolemaker.utils.MensajeChat;
 import com.codamasters.rolemaker.utils.Parseador;
@@ -31,6 +32,8 @@ import java.util.logging.Logger;
 public class GcmIntentService extends IntentService {
 
     private static int num_messages=0;
+    private static String gameID = "";
+
 
     public GcmIntentService() {
         super("GcmIntentService");
@@ -60,8 +63,12 @@ public class GcmIntentService extends IntentService {
 
             @Override
             public void run() {
-                if(ChatFragment.isOpen()) {
-                    ChatFragment.updateMessages(message);
+
+                Log.d("Mensaje recibido", message);
+
+
+                if(ChatFragment2.isOpen()) {
+                    ChatFragment2.updateMessages(message);
                 }
                 else{
 
@@ -69,7 +76,7 @@ public class GcmIntentService extends IntentService {
 
                     Gson gson = new Gson();
 
-                    String json = prefs.getString("messages", "");
+                    String json = prefs.getString("messages"+gameID, "");
                     ArrayList<MensajeChat> resultList = (ArrayList<MensajeChat>) gson.fromJson(json, ArrayList.class);
                     MensajeChat aux = Parseador.parsearMensaje(message);
                     resultList.add(aux);
@@ -79,7 +86,7 @@ public class GcmIntentService extends IntentService {
 
                     json = gson.toJson(resultList);
 
-                    prefs.edit().putString("messages", json).apply();
+                    prefs.edit().putString("messages"+gameID, json).apply();
 
                 }
             }
@@ -102,5 +109,10 @@ public class GcmIntentService extends IntentService {
     public static void setNum_messages(int num_messages) {
         GcmIntentService.num_messages = num_messages;
     }
+
+    public static void setGameID(String gameID) {
+        GcmIntentService.gameID = gameID;
+    }
+
 
 }

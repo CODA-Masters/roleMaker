@@ -111,14 +111,13 @@ public class MessagingEndpoint {
 
         for (UserRecord user : users) {
 
-            sender.send(msg, user.getRegId(), 5);
+            Result result = sender.send(msg, user.getRegId(), 5);
         }
     }
 
     private UserRecord findRecord(Long id) {
         return ofy().load().type(UserRecord.class).filter("id", id).first().now();
     }
-
 
     public void sendMessage(@Named("message") String message) throws IOException {
         if (message == null || message.trim().length() == 0) {

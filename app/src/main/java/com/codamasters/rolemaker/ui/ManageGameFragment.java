@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.codamasters.rolemaker.R;
 import com.codamasters.rolemaker.controller.GcmDeleteGameAsyncTask;
+import com.codamasters.rolemaker.controller.GcmIntentService;
 
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
@@ -98,9 +99,12 @@ public class ManageGameFragment extends Fragment {
         bOpenChat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                GcmIntentService.setGameID(game.get("gameID"));
+
                 getFragmentManager().beginTransaction()
                         .addToBackStack("")
-                        .replace(R.id.container, ChatFragment2.newInstance("", participantIDs,game.get("gameID")))
+                        .replace(R.id.container, ChatFragment2.newInstance("", participantIDs, game.get("gameID")))
                         .commit();
             }
         });

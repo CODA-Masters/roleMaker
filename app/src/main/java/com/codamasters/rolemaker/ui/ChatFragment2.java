@@ -27,7 +27,6 @@ import org.json.simple.JSONObject;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.lang.reflect.Array;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -77,7 +76,7 @@ public class ChatFragment2 extends Fragment {
         lv = (ListView) rootView.findViewById(R.id.list);
 
         //      load tasks from preference
-        prefs = getActivity().getSharedPreferences("SHARED_MESSAGES"+gameID, Context.MODE_PRIVATE);
+        prefs = getActivity().getSharedPreferences("SHARED_MESSAGES", Context.MODE_PRIVATE);
 
         Gson gson = new Gson();
         String json = prefs.getString("messages"+gameID, "");
@@ -149,7 +148,7 @@ public class ChatFragment2 extends Fragment {
 
         // Guardamos los datos del chat
 
-        prefs = getActivity().getSharedPreferences("SHARED_MESSAGES"+gameID, Context.MODE_PRIVATE);
+        prefs = getActivity().getSharedPreferences("SHARED_MESSAGES", Context.MODE_PRIVATE);
         Gson gson = new Gson();
         String json = gson.toJson(listaMensajes);
 
@@ -163,7 +162,7 @@ public class ChatFragment2 extends Fragment {
     public void onResume(){
         super.onResume();
 
-        prefs = getActivity().getSharedPreferences("SHARED_MESSAGES"+gameID, Context.MODE_PRIVATE);
+        prefs = getActivity().getSharedPreferences("SHARED_MESSAGES", Context.MODE_PRIVATE);
 
         Gson gson = new Gson();
         String json = prefs.getString("messages"+gameID, "");
