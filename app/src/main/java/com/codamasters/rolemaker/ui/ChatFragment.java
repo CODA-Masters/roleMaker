@@ -250,10 +250,8 @@ public class ChatFragment extends Fragment {
                 holder.usuario.setText(mc.getUser());
             else
                 holder.usuario.setText(getString(R.string.me));
-            Date date = mc.getFecha();
-            String DATE_FORMAT_NOW = "HH:mm:ss dd/MM/yyy";
-            SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
-            holder.fecha.setText(sdf.format(date).toString());
+
+            holder.fecha.setText(mc.getFecha());
 
             return convertView;
         }
