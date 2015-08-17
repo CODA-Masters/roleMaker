@@ -82,6 +82,7 @@ public class ShowUsersFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 new GcmSearchUserAsyncTask(getActivity(), myId, tSearchUser.getText().toString() ).execute();
+                updateFriends();
             }
         });
 
