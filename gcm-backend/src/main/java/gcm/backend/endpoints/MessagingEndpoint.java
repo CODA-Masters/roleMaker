@@ -85,7 +85,6 @@ public class MessagingEndpoint {
         }
 
         Sender sender = new Sender(API_KEY);
-        Message msg = new Message.Builder().addData("message", message).build();
 
         // Parseamos el String y obtenemos los IDS y con ello los usuarios
 
@@ -110,6 +109,21 @@ public class MessagingEndpoint {
         // Luego en la funcion GCMReceiveMessage ya insertamos cada mensaje en el usuario y partida correspondiente
 
         for (UserRecord user : users) {
+
+
+            s = "[]";
+            String messageSend = "";
+            try {
+                Object obj = parser.parse(s);
+                JSONArray array = (JSONArray) obj;
+                array.add(user.getId());
+                array.add(message);
+                messageSend = array.toJSONString();;
+            } catch (org.json.simple.parser.ParseException e) {
+                e.printStackTrace();
+            }
+            
+            Message msg = new Message.Builder().addData("message", messageSend).build();
 
             Result result = sender.send(msg, user.getRegId(), 5);
         }

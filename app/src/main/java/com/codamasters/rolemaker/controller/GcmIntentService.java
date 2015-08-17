@@ -14,6 +14,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.codamasters.rolemaker.R;
@@ -23,6 +24,9 @@ import com.codamasters.rolemaker.utils.MensajeChat;
 import com.codamasters.rolemaker.utils.Parseador;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.gson.Gson;
+
+import org.json.simple.JSONArray;
+import org.json.simple.parser.JSONParser;
 
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -63,31 +67,44 @@ public class GcmIntentService extends IntentService {
 
             @Override
             public void run() {
-
                 Log.d("Mensaje recibido", message);
 
-
-                if(ChatFragment.isOpen()) {
-                    ChatFragment.updateMessages(message);
+                JSONParser parser=new JSONParser();
+                String userID = "";
+                String receivedMessage = "";
+                try {
+                    Object obj = parser.parse(message);
+                    JSONArray array = (JSONArray) obj;
+                    userID = array.get(0).toString();
+                    receivedMessage = array.get(1).toString();
+                } catch (org.json.simple.parser.ParseException e) {
+                    e.printStackTrace();
                 }
-                else{
 
-                    SharedPreferences prefs = getSharedPreferences("SHARED_MESSAGES", Context.MODE_PRIVATE);
+                if(userID.equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("user", "nothing"))){
 
-                    Gson gson = new Gson();
+                    if(ChatFragment.isOpen()) {
+                        ChatFragment.updateMessages(receivedMessage);
+                    }
+                    else{
 
-                    String json = prefs.getString("messages"+gameID, "");
-                    ArrayList<MensajeChat> resultList = (ArrayList<MensajeChat>) gson.fromJson(json, ArrayList.class);
-                    MensajeChat aux = Parseador.parsearMensaje(message);
-                    resultList.add(aux);
-                    num_messages++;
-                    Notify("Role Maker", num_messages+" New Messages");
+                        SharedPreferences prefs = getSharedPreferences("SHARED_MESSAGES", Context.MODE_PRIVATE);
+
+                        Gson gson = new Gson();
+
+                        String json = prefs.getString("messages"+gameID, "");
+                        ArrayList<MensajeChat> resultList = (ArrayList<MensajeChat>) gson.fromJson(json, ArrayList.class);
+                        MensajeChat aux = Parseador.parsearMensaje(receivedMessage);
+                        resultList.add(aux);
+                        num_messages++;
+                        Notify("Role Maker", num_messages+" New Messages");
 
 
-                    json = gson.toJson(resultList);
+                        json = gson.toJson(resultList);
 
-                    prefs.edit().putString("messages"+gameID, json).apply();
+                        prefs.edit().putString("messages"+gameID, json).apply();
 
+                    }
                 }
             }
         });
