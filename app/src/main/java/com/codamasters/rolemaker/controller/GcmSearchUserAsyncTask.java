@@ -35,6 +35,7 @@ public class GcmSearchUserAsyncTask extends AsyncTask<Context, Void, String> {
 
     public GcmSearchUserAsyncTask(Context context, String userID, String regName) {
         this.context = context;
+        this.userID = userID;
         this.regName = regName;
     }
 
@@ -73,10 +74,11 @@ public class GcmSearchUserAsyncTask extends AsyncTask<Context, Void, String> {
         String msg = "";
         try {
 
-            UserRecord user = regService.findRecordbyName(regName).execute();
             user = regService.listFriends(userID).execute();
+
+            UserRecord userSearch = regService.findRecordbyName(regName).execute();
             users = new ArrayList<>();
-            users.add(user);
+            users.add(userSearch);
 
         } catch (IOException ex) {
             ex.printStackTrace();
