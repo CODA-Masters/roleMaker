@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.codamasters.rolemaker.R;
 import com.codamasters.rolemaker.controller.GcmAddFriendAsyncTask;
+import com.codamasters.rolemaker.controller.GcmSearchUserAsyncTask;
 import com.codamasters.rolemaker.controller.GcmShowUsersAsyncTask;
 
 import org.json.simple.JSONArray;
@@ -41,8 +42,12 @@ public class ShowUsersFragment extends Fragment {
     private static  ArrayList<String> requestReceivedIDs;
 
     private static PostAdapter adapter;
+    private TextView tSearchUser;
+    private Button bSearchUser;
     private ListView searchListView;
     private ListView requestListView;
+
+    private String myId;
 
     public static ShowUsersFragment newInstance(String param1) {
         ShowUsersFragment fragment = new ShowUsersFragment();
@@ -65,17 +70,24 @@ public class ShowUsersFragment extends Fragment {
     Bundle savedInstanceState) {
         View rootView=inflater.inflate(R.layout.activity_show_users, container, false);
 
+        myId = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("user", "nothing");
 
         listContainer = (LinearLayout) rootView.findViewById(R.id.contenedor_lista);
         searchListView = (ListView) rootView.findViewById(R.id.searchList);
         resultList = new ArrayList<String>();
+        tSearchUser = (TextView) rootView.findViewById(R.id.textSearch);
+        bSearchUser = (Button) rootView.findViewById(R.id.buttonSearch);
 
+        bSearchUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new GcmSearchUserAsyncTask(getActivity(), myId, tSearchUser.getText().toString() ).execute();
+            }
+        });
 
         adapter = new PostAdapter(getActivity());
 
         searchListView.setAdapter(adapter);
-
-        String myId = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("user", "nothing");
 
         new GcmShowUsersAsyncTask(getActivity(), myId).execute();
         return rootView;

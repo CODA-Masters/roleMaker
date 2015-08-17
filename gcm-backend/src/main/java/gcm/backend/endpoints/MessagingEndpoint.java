@@ -122,7 +122,7 @@ public class MessagingEndpoint {
             } catch (org.json.simple.parser.ParseException e) {
                 e.printStackTrace();
             }
-            
+
             Message msg = new Message.Builder().addData("message", messageSend).build();
 
             Result result = sender.send(msg, user.getRegId(), 5);
