@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 import com.codamasters.rolemaker.R;
 import com.codamasters.rolemaker.controller.GcmIntentService;
-import com.codamasters.rolemaker.controller.GcmMessageAsyncTask;
+import com.codamasters.rolemaker.controller.GcmSendMessageAsyncTask;
 import com.codamasters.rolemaker.utils.MensajeChat;
 import com.codamasters.rolemaker.utils.Parseador;
 import com.google.common.reflect.TypeToken;
@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 /**
- * Created by Juan on 26/07/2015.
+ * Created by Julio on 16/08/2015.
  */
 public class ChatFragment extends Fragment {
 
@@ -41,6 +41,8 @@ public class ChatFragment extends Fragment {
 
     // Hashmap for ListView
     private static ArrayList<MensajeChat> listaMensajes;
+    private static ArrayList<String> userIDs;
+    private static String gameID;
     private static PostAdapter adapter;
     private ListView lv;
     private Button bSend;
@@ -49,10 +51,12 @@ public class ChatFragment extends Fragment {
 
     private static boolean open;
 
-    public static ChatFragment newInstance(String param1) {
+    public static ChatFragment newInstance(String param1,ArrayList<String> uIDs, String gID) {
         ChatFragment fragment = new ChatFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM, param1);
+        userIDs = uIDs;
+        gameID = gID;
         fragment.setArguments(args);
         return fragment;
     }
@@ -75,7 +79,7 @@ public class ChatFragment extends Fragment {
         prefs = getActivity().getSharedPreferences("SHARED_MESSAGES", Context.MODE_PRIVATE);
 
         Gson gson = new Gson();
-        String json = prefs.getString("messages", "");
+        String json = prefs.getString("messages"+gameID, "");
         if(json == ""){
             listaMensajes = new ArrayList<MensajeChat>();
         }
@@ -122,12 +126,12 @@ public class ChatFragment extends Fragment {
         JSONObject jsonObj = new JSONObject();
         jsonObj.put("message",message);
         jsonObj.put("username", username);
-        jsonObj.put("date",stringDate.toString());
+        jsonObj.put("date", stringDate.toString());
         StringWriter out = new StringWriter();
         jsonObj.writeJSONString(out);
         String jsonText = out.toString();
 
-        new GcmMessageAsyncTask(getActivity(), jsonText).execute();
+        new GcmSendMessageAsyncTask(getActivity(), jsonText, userIDs).execute();
         tv.setText("");
     }
 
@@ -149,7 +153,7 @@ public class ChatFragment extends Fragment {
         String json = gson.toJson(listaMensajes);
 
         Log.d("Mensajes serializados",json+"");
-        prefs.edit().putString("messages", json).apply();
+        prefs.edit().putString("messages"+gameID, json).apply();
 
         open=false;
     }
@@ -161,7 +165,7 @@ public class ChatFragment extends Fragment {
         prefs = getActivity().getSharedPreferences("SHARED_MESSAGES", Context.MODE_PRIVATE);
 
         Gson gson = new Gson();
-        String json = prefs.getString("messages", "");
+        String json = prefs.getString("messages"+gameID, "");
         if(listaMensajes.size() > 0) {
             Type type = new TypeToken<ArrayList<MensajeChat>>(){}.getType();
             listaMensajes = (ArrayList<MensajeChat>) gson.fromJson(json, type);

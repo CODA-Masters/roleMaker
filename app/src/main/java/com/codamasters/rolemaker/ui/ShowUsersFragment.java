@@ -34,7 +34,6 @@ public class ShowUsersFragment extends Fragment {
     // Hashmap for ListView
     private LinearLayout listContainer;
     private static ArrayList<String> resultList;
-    private static ArrayList<String> requestList;
     private static ArrayList<UserRecord> userList;
     private static  ArrayList<String> friendIDs;
     private static  ArrayList<String> userIDs;
@@ -69,9 +68,7 @@ public class ShowUsersFragment extends Fragment {
 
         listContainer = (LinearLayout) rootView.findViewById(R.id.contenedor_lista);
         searchListView = (ListView) rootView.findViewById(R.id.searchList);
-        requestListView = (ListView)rootView.findViewById(R.id.requestList);
         resultList = new ArrayList<String>();
-        requestList = new ArrayList<String>();
 
 
         adapter = new PostAdapter(getActivity());

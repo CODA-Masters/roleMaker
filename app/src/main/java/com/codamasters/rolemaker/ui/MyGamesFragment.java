@@ -14,7 +14,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.codamasters.rolemaker.R;
+import com.codamasters.rolemaker.controller.GcmIntentService;
 import com.codamasters.rolemaker.controller.GcmShowMyGamesTask;
+
+import org.json.simple.JSONArray;
+import org.json.simple.parser.JSONParser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,6 +34,8 @@ public class MyGamesFragment extends Fragment {
     // Hashmap for ListView
     private static ArrayList<HashMap<String, String> > resultList;  // Array que almacena los registros de partidas
     // Cada registro de partida está representado por un Hashmap que incluye los distintos campos del mismo.
+    private static ArrayList<String> masterNames;
+    private static ArrayList<String> participantIDs;
 
     private static String userID;
 
@@ -59,6 +65,7 @@ public class MyGamesFragment extends Fragment {
 
         lv = (ListView) rootView.findViewById(R.id.gameList);
         resultList = new ArrayList<HashMap<String, String>>();
+        masterNames = new ArrayList<>();
 
         adapter = new PostAdapter(getActivity());
 
@@ -68,31 +75,38 @@ public class MyGamesFragment extends Fragment {
 
         new GcmShowMyGamesTask(getActivity()).execute();
 
+
         return rootView;
     }
 
-    public static void setGameList(ArrayList<GameRecord> gameList){
+    public static void setGameList(ArrayList<GameRecord> gameList) {
         if(gameList == null){
             return;
         }
-        for (GameRecord game: gameList){
+
+        for (int i = 0; i < gameList.size(); i++){
             HashMap<String, String> aux = new HashMap<>();
 
-            aux.put("gameID",game.getId().toString());
-            aux.put("name",game.getName());
-            aux.put("master",game.getMaster());
-            aux.put("numPlayers",game.getNumPlayers().toString());
-            aux.put("maxPlayers",game.getMaxPlayers().toString());
-            aux.put("description",game.getDescription());
-            aux.put("style", game.getStyle());
-            aux.put("pendingPlayers",game.getPendingPlayers());
-            aux.put("players",game.getPlayers());
+            aux.put("gameID", gameList.get(i).getId().toString());
+            aux.put("name", gameList.get(i).getName());
+            aux.put("master", gameList.get(i).getMaster());
+            aux.put("numPlayers", gameList.get(i).getNumPlayers().toString());
+            aux.put("maxPlayers", gameList.get(i).getMaxPlayers().toString());
+            aux.put("description", gameList.get(i).getDescription());
+            aux.put("style", gameList.get(i).getStyle());
+            aux.put("pendingPlayers", gameList.get(i).getPendingPlayers());
+            aux.put("players", gameList.get(i).getPlayers());
+            aux.put("masterName",masterNames.get(i));
 
             resultList.add(aux);
 
         }
 
         adapter.notifyDataSetChanged();
+    }
+
+    public static void setMasterNames(ArrayList<String> m){
+        masterNames = m;
     }
 
     public void updateList(){
@@ -113,7 +127,7 @@ public class MyGamesFragment extends Fragment {
 
         class ViewHolder {
             TextView game_name, master_name, num_players, description, game_style;
-            Button manageButton;
+            Button manageButton, enterGame;
 
         }
 
@@ -160,9 +174,25 @@ public class MyGamesFragment extends Fragment {
             Log.v(TAG, "in getView for position " + position + ", convertView is "
                     + ((convertView == null) ? "null" : "being recycled"));
 
+
+            participantIDs = new ArrayList<>();
+            participantIDs.add(resultList.get(position).get("master"));
+
+            JSONParser parser=new JSONParser();
+            String s = resultList.get(position).get("players");
+            try {
+                Object obj = parser.parse(s);
+                JSONArray array = (JSONArray) obj;
+                for(int i = 0; i < array.size(); i++){
+                    participantIDs.add(array.get(i).toString());
+                }
+            } catch (org.json.simple.parser.ParseException e) {
+                e.printStackTrace();
+            }
+
             if (convertView == null) {
 
-                convertView = inflater.inflate(R.layout.game_list_item, null);
+                convertView = inflater.inflate(R.layout.my_game_list_item, null);
 
                 holder = new ViewHolder();
 
@@ -176,8 +206,13 @@ public class MyGamesFragment extends Fragment {
                         .findViewById(R.id.description);
                 holder.game_style = (TextView) convertView
                         .findViewById(R.id.game_style);
-                holder.manageButton = (Button) convertView.findViewById(R.id.joinButton);
-                holder.manageButton.setText("Manage Game");
+                holder.manageButton = (Button) convertView.findViewById(R.id.manageButton);
+                holder.enterGame = (Button) convertView.findViewById(R.id.enterGame);
+
+                // Si no somos el master no podremos administrar la partida, sólo jugar
+                if(!resultList.get(position).get("master").equals(userID)){
+                    holder.manageButton.setVisibility(View.GONE);
+                }
 
                 convertView.setTag(holder);
 
@@ -186,7 +221,7 @@ public class MyGamesFragment extends Fragment {
 
             // Setting all values in listview
             holder.game_name.setText(resultList.get(position).get("name"));
-            holder.master_name.setText(resultList.get(position).get("master"));
+            holder.master_name.setText(resultList.get(position).get("masterName"));
             holder.num_players.setText(resultList.get(position).get("numPlayers")+
             "/"+resultList.get(position).get("maxPlayers"));
             holder.game_style.setText(resultList.get(position).get("style"));
@@ -196,12 +231,22 @@ public class MyGamesFragment extends Fragment {
                 public void onClick(View v) {
                     getFragmentManager().beginTransaction()
                             .addToBackStack("")
-                            .replace(R.id.container, ManageGameFragment.newInstance("",resultList.get(position)))
+                            .replace(R.id.container, ManageGameFragment.newInstance("", resultList.get(position)))
                             .commit();
                 }
             });
+            holder.enterGame.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    GcmIntentService.setGameID(resultList.get(position).get("gameID"));
 
+                    getFragmentManager().beginTransaction()
+                            .addToBackStack("")
+                            .replace(R.id.container, ChatFragment.newInstance("", participantIDs, resultList.get(position).get("gameID")))
+                            .commit();
 
+                }
+            });
             return convertView;
         }
 

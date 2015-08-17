@@ -37,6 +37,7 @@ public class JoinGameFragment extends Fragment {
 
     private static ArrayList<Boolean> requestSentList, joinedList;
     private static String userID;
+    private static ArrayList<String> masterNames;
 
     private static PostAdapter adapter;
     private ListView lv;
@@ -64,6 +65,8 @@ public class JoinGameFragment extends Fragment {
 
         lv = (ListView) rootView.findViewById(R.id.gameList);
         resultList = new ArrayList<HashMap<String, String>>();
+        masterNames = new ArrayList<>();
+
 
         requestSentList = new ArrayList<>();
         joinedList = new ArrayList<>();
@@ -74,34 +77,36 @@ public class JoinGameFragment extends Fragment {
 
         userID = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("user", "nothing");
 
-        new GcmShowGamesAsyncTask(getActivity()).execute();
+        new GcmShowGamesAsyncTask(getActivity(),userID).execute();
+
 
         return rootView;
     }
 
     public static void setGameList(ArrayList<GameRecord> gameList){
-        for (GameRecord game: gameList){
+        for (int i = 0; i < gameList.size(); i++){
             boolean requestSent = false;
             boolean joined = false;
             HashMap<String, String> aux = new HashMap<>();
 
-            aux.put("gameID",game.getId().toString());
-            aux.put("name",game.getName());
-            aux.put("master",game.getMaster());
-            aux.put("numPlayers",game.getNumPlayers().toString());
-            aux.put("maxPlayers",game.getMaxPlayers().toString());
-            aux.put("description",game.getDescription());
-            aux.put("style", game.getStyle());
-            aux.put("pendingPlayers",game.getPendingPlayers());
+            aux.put("gameID", gameList.get(i).getId().toString());
+            aux.put("name", gameList.get(i).getName());
+            aux.put("master", gameList.get(i).getMaster());
+            aux.put("numPlayers", gameList.get(i).getNumPlayers().toString());
+            aux.put("maxPlayers", gameList.get(i).getMaxPlayers().toString());
+            aux.put("description", gameList.get(i).getDescription());
+            aux.put("style", gameList.get(i).getStyle());
+            aux.put("pendingPlayers", gameList.get(i).getPendingPlayers());
+            aux.put("masterName",masterNames.get(i));
 
             JSONParser parser=new JSONParser();
-            String s = game.getPendingPlayers();
+            String s = gameList.get(i).getPendingPlayers();
 
             try {
                 Object obj = parser.parse(s);
                 JSONArray array = (JSONArray) obj;
-                for(int i = 0; i < array.size(); i++){
-                    if(array.get(i).toString().equals(userID)){
+                for(int j = 0; j < array.size(); j++){
+                    if(array.get(j).toString().equals(userID)){
                         requestSent = true;
                         requestSentList.add(true);
                         break;
@@ -111,13 +116,13 @@ public class JoinGameFragment extends Fragment {
                 e.printStackTrace();
             }
 
-            s = game.getPlayers();
+            s = gameList.get(i).getPlayers();
 
             try {
                 Object obj = parser.parse(s);
                 JSONArray array = (JSONArray) obj;
-                for(int i = 0; i < array.size(); i++){
-                    if(array.get(i).toString().equals(userID)){
+                for(int j = 0; j < array.size(); j++){
+                    if(array.get(j).toString().equals(userID)){
                         joined = true;
                         joinedList.add(true);
                         break;
@@ -140,6 +145,10 @@ public class JoinGameFragment extends Fragment {
         }
 
         adapter.notifyDataSetChanged();
+    }
+
+    public static void setMasterNames(ArrayList<String> m){
+        masterNames = m;
     }
 
     public void updateList(){
@@ -237,6 +246,11 @@ public class JoinGameFragment extends Fragment {
 
                 }
 
+                else if(Integer.parseInt(resultList.get(position).get("numPlayers")) >= Integer.parseInt(resultList.get(position).get("maxPlayers"))){
+                    holder.joinButton.setText("Full");
+                    holder.joinButton.setEnabled(false);
+                }
+
                 convertView.setTag(holder);
 
             } else
@@ -244,9 +258,9 @@ public class JoinGameFragment extends Fragment {
 
             // Setting all values in listview
             holder.game_name.setText(resultList.get(position).get("name"));
-            holder.master_name.setText(resultList.get(position).get("master"));
+            holder.master_name.setText(resultList.get(position).get("masterName"));
             holder.num_players.setText(resultList.get(position).get("numPlayers")+
-            "/"+resultList.get(position).get("maxPlayers"));
+                    "/" + resultList.get(position).get("maxPlayers"));
                 holder.game_style.setText(resultList.get(position).get("style"));
                 holder.description.setText(resultList.get(position).get("description"));
             if(!requestSentList.get(position)) {

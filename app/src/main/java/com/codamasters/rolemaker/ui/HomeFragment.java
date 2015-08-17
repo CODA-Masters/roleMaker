@@ -25,7 +25,7 @@ public class HomeFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_SECTION_NUMBER = "section_number";
 
-    Button bOpenChat,bShowUsers,bShowFriends, bShowRequests, bCreateGame, bJoinGame, bMyGames;
+    Button bShowUsers,bShowFriends, bShowRequests, bCreateGame, bJoinGame, bMyGames;
 
 
     private OnFragmentInteractionListener mListener;
@@ -47,13 +47,6 @@ public class HomeFragment extends Fragment {
 
     public HomeFragment() {
         // Required empty public constructor
-    }
-
-    public void openChat (View view){
-        getFragmentManager().beginTransaction()
-                .addToBackStack("")
-                .replace(R.id.container,ChatFragment.newInstance(""))
-                .commit();
     }
 
     public void showUsers (View view){
@@ -107,7 +100,6 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView=inflater.inflate(R.layout.fragment_home, container, false);
-        bOpenChat=(Button) rootView.findViewById(R.id.bOpenChat);
         bShowUsers=(Button) rootView.findViewById(R.id.bShowUsers);
         bShowFriends=(Button) rootView.findViewById(R.id.bShowFriends);
         bShowRequests=(Button) rootView.findViewById(R.id.bShowRequests);
@@ -119,12 +111,6 @@ public class HomeFragment extends Fragment {
     }
 
     private void setListeners(){
-        bOpenChat.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openChat(v);
-            }
-        });
         bShowFriends.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

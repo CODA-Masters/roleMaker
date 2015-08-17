@@ -24,14 +24,17 @@ public class GcmShowGamesAsyncTask extends AsyncTask<Context, Void, String> {
     private static Registration regService = null;
     private GoogleCloudMessaging gcm;
     private Context context;
+    private String userID;
     private ArrayList<GameRecord> games;
+    private ArrayList<String> masterNames;
     private ProgressDialog pDialog;
 
     // TODO: change to your own sender ID to Google Developers Console project number, as per instructions above
     private static final String SENDER_ID = Constants.SENDER_ID;
 
-    public GcmShowGamesAsyncTask(Context context) {
+    public GcmShowGamesAsyncTask(Context context, String userID) {
         this.context = context;
+        this.userID = userID;
     }
 
 
@@ -69,9 +72,12 @@ public class GcmShowGamesAsyncTask extends AsyncTask<Context, Void, String> {
         String msg = "";
         try {
 
-            int count = 10;
-            CollectionResponseGameRecord gamesCollection = regService.listGames().execute();
+            CollectionResponseGameRecord gamesCollection = regService.joinGames(userID).execute();
             games = (ArrayList)gamesCollection.getItems();
+            masterNames = new ArrayList<>();
+            for(GameRecord game : games){
+                masterNames.add(regService.findRecord(Long.parseLong(game.getMaster())).execute().getName());
+            }
 
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -87,6 +93,7 @@ public class GcmShowGamesAsyncTask extends AsyncTask<Context, Void, String> {
         if (pDialog.isShowing())
             pDialog.dismiss();
 
+        JoinGameFragment.setMasterNames(masterNames);
         JoinGameFragment.setGameList(games);
 
 

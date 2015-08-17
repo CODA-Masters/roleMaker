@@ -17,7 +17,7 @@ import android.os.Looper;
 import android.util.Log;
 
 import com.codamasters.rolemaker.R;
-import com.codamasters.rolemaker.ui.ChatFragment2;
+import com.codamasters.rolemaker.ui.ChatFragment;
 import com.codamasters.rolemaker.ui.LoggedActivity;
 import com.codamasters.rolemaker.utils.MensajeChat;
 import com.codamasters.rolemaker.utils.Parseador;
@@ -67,8 +67,8 @@ public class GcmIntentService extends IntentService {
                 Log.d("Mensaje recibido", message);
 
 
-                if(ChatFragment2.isOpen()) {
-                    ChatFragment2.updateMessages(message);
+                if(ChatFragment.isOpen()) {
+                    ChatFragment.updateMessages(message);
                 }
                 else{
 

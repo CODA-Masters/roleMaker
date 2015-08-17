@@ -27,6 +27,7 @@ public class GcmShowMyGamesTask extends AsyncTask<Context, Void, String> {
     private static Registration regService = null;
     private Context context;
     private ArrayList<GameRecord> games;
+    private ArrayList<String> masterNames;
     private ProgressDialog pDialog;
 
     // TODO: change to your own sender ID to Google Developers Console project number, as per instructions above
@@ -57,12 +58,17 @@ public class GcmShowMyGamesTask extends AsyncTask<Context, Void, String> {
 
         String msg = "";
         games = new ArrayList<>();
+        masterNames = new ArrayList<>();
         try {
             String userID = PreferenceManager.getDefaultSharedPreferences(context).getString("user", "nothing");
 
             Log.d("Mi id",userID);
             CollectionResponseGameRecord gamesCollection = regService.listMyGames(userID).execute();
             games = (ArrayList) gamesCollection.getItems();
+            for(GameRecord game : games){
+                masterNames.add(regService.findRecord(Long.parseLong(game.getMaster())).execute().getName());
+            }
+
 
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -78,6 +84,7 @@ public class GcmShowMyGamesTask extends AsyncTask<Context, Void, String> {
         if (pDialog.isShowing())
             pDialog.dismiss();
 
+        MyGamesFragment.setMasterNames(masterNames);
         MyGamesFragment.setGameList(games);
 
     }

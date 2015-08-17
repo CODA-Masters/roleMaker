@@ -400,9 +400,9 @@ public class RegistrationEndpoint {
         ofy().save().entity(game).now();
     }
 
-    @ApiMethod(name = "listGames")
-    public CollectionResponse<GameRecord> listGames(){
-        List<GameRecord> games = ofy().load().type(GameRecord.class).list();
+    @ApiMethod(name = "joinGames")
+    public CollectionResponse<GameRecord> joinGames(@Named("userID") String userID){
+        List<GameRecord> games = ofy().load().type(GameRecord.class).filter("master !=", userID).list();
         return CollectionResponse.<GameRecord>builder().setItems(games).build();
     }
 
