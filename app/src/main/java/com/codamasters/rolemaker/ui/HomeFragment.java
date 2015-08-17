@@ -1,16 +1,35 @@
 package com.codamasters.rolemaker.ui;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import com.codamasters.rolemaker.R;
+import com.codamasters.rolemaker.controller.DownloadImageAsyncTask;
+import com.codamasters.rolemaker.controller.UploadImageAsyncTask;
+
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -24,8 +43,11 @@ public class HomeFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_SECTION_NUMBER = "section_number";
-
-    Button bShowUsers,bShowFriends, bShowRequests, bCreateGame, bJoinGame, bMyGames;
+    private static final int REQUEST_CODE = 1;
+    Button bShowUsers,bShowFriends, bShowRequests, bCreateGame, bJoinGame, bMyGames, bUploadPhoto, bDownloadPhoto;
+    private static ImageView imageView;
+    private static Bitmap image;
+    private static String url;
 
 
     private OnFragmentInteractionListener mListener;
@@ -106,6 +128,9 @@ public class HomeFragment extends Fragment {
         bCreateGame=(Button) rootView.findViewById(R.id.bCreateGame);
         bJoinGame=(Button) rootView.findViewById(R.id.bJoinGame);
         bMyGames=(Button) rootView.findViewById(R.id.bMyGames);
+        bUploadPhoto=(Button) rootView.findViewById(R.id.bUploadPhoto);
+        bDownloadPhoto=(Button) rootView.findViewById(R.id.bDownloadPhoto);
+        imageView = (ImageView) rootView.findViewById(R.id.imageView);
         setListeners();
         return rootView;
     }
@@ -147,6 +172,34 @@ public class HomeFragment extends Fragment {
                 myGames(v);
             }
         });
+        bUploadPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                startActivityForResult(intent, REQUEST_CODE);
+
+
+            }
+        });
+
+        bDownloadPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                new DownloadImageAsyncTask(getActivity(), url).execute();
+            }
+        });
+    }
+
+    public static void setImage(Bitmap bmp){
+        imageView.setImageBitmap(bmp);
+    }
+
+    public static void setURL(String u){
+        url = u;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -182,6 +235,30 @@ public class HomeFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d("Subiendo imagen", "");
+            try {
+                // We need to recyle unused bitmaps
+                if (image != null) {
+                    image.recycle();
+                }
+                InputStream stream = getActivity().getContentResolver().openInputStream(
+                        data.getData());
+                image = BitmapFactory.decodeStream(stream);
+                stream.close();
+
+                new UploadImageAsyncTask(getActivity(),image).execute();
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
 }

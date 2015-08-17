@@ -1,5 +1,8 @@
  package com.codamasters.rolemaker.ui;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -12,8 +15,11 @@ import android.view.MenuItem;
 
 import com.codamasters.rolemaker.R;
 
+import java.io.IOException;
+import java.io.InputStream;
 
-public class LoggedActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+
+ public class LoggedActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -24,6 +30,8 @@ public class LoggedActivity extends ActionBarActivity implements NavigationDrawe
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
+     private static final int REQUEST_CODE = 1;
+     private HomeFragment frag;
 
 
     @Override
@@ -44,7 +52,6 @@ public class LoggedActivity extends ActionBarActivity implements NavigationDrawe
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
-        Fragment frag=null;
         switch (position){
             case 1:frag=HomeFragment.newInstance(position);break;
 
@@ -113,5 +120,10 @@ public class LoggedActivity extends ActionBarActivity implements NavigationDrawe
 
         return super.onOptionsItemSelected(item);
     }
+
+     @Override
+     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+         frag.onActivityResult(requestCode,resultCode,data);
+     }
 
 }

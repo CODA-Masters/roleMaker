@@ -45,4 +45,20 @@
         android:text="show friend requests"
         android:id="@+id/bShowRequests" />
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Upload Photo"
+        android:id="@+id/bUploadPhoto" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Download Photo"
+        android:id="@+id/bDownloadPhoto" />
+
 </LinearLayout>
