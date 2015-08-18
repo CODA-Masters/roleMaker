@@ -56,4 +56,10 @@
         android:text="Upload Photo"
         android:id="@+id/bUploadPhoto" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Dice"
+        android:id="@+id/bDice" />
+
 </LinearLayout>

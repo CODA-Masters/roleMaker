@@ -5,12 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,16 +18,9 @@ import com.codamasters.rolemaker.R;
 import com.codamasters.rolemaker.controller.DownloadImageAsyncTask;
 import com.codamasters.rolemaker.controller.UploadImageAsyncTask;
 
-import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -45,7 +35,7 @@ public class HomeFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_SECTION_NUMBER = "section_number";
     private static final int REQUEST_CODE = 1;
-    Button bShowUsers,bShowFriends, bShowRequests, bCreateGame, bJoinGame, bMyGames, bUploadPhoto;
+    Button bShowUsers,bShowFriends, bShowRequests, bCreateGame, bJoinGame, bMyGames, bUploadPhoto, bDice;
     private static ImageView imageView;
     private static Bitmap image;
     private static String url;
@@ -115,6 +105,14 @@ public class HomeFragment extends Fragment {
                 .commit();
     }
 
+    public void dice (View view){
+        getFragmentManager().beginTransaction()
+                .addToBackStack("")
+                .replace(R.id.container, DiceFragment.newInstance(""))
+                .commit();
+    }
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -132,6 +130,7 @@ public class HomeFragment extends Fragment {
         bMyGames=(Button) rootView.findViewById(R.id.bMyGames);
         bUploadPhoto=(Button) rootView.findViewById(R.id.bUploadPhoto);
         imageView = (ImageView) rootView.findViewById(R.id.imageView);
+        bDice = (Button) rootView.findViewById(R.id.bDice);
         setListeners();
         return rootView;
     }
@@ -183,6 +182,12 @@ public class HomeFragment extends Fragment {
                 startActivityForResult(intent, REQUEST_CODE);
 
 
+            }
+        });
+        bDice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dice(v);
             }
         });
     }
