@@ -3,7 +3,6 @@ package com.codamasters.rolemaker.controller;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Base64;
 import android.util.Log;
@@ -11,14 +10,13 @@ import android.util.Log;
 import com.codamasters.rolemaker.ui.HomeFragment;
 import com.codamasters.rolemaker.utils.Constants;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
@@ -46,7 +44,7 @@ public class UploadImageAsyncTask extends AsyncTask<Context, Void, String> {
         super.onPreExecute();
         // Showing progress dialog
         pDialog = new ProgressDialog(context);
-        pDialog.setMessage("Downloading image");
+        pDialog.setMessage("Uploading image");
         pDialog.setCancelable(false);
         pDialog.show();
     }
@@ -54,57 +52,62 @@ public class UploadImageAsyncTask extends AsyncTask<Context, Void, String> {
     @Override
     protected String doInBackground(Context... params) {
 
+        String IMGUR_POST_URI = "https://api.imgur.com/3/upload";
+        String IMGUR_API_KEY = "0d9f6713d9e784a";
+
         String msg = "";
 
-        // Creates Byte Array from picture
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos); // Not sure whether this should be jpeg or png, try both and see which works best
-        URL url = null;
         try {
-            url = new URL("https://api.imgur.com/3/image");
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-            msg = "Error: " + e.getMessage();
-        }
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            System.out.println("Writing image...");
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+            URL url = new URL(IMGUR_POST_URI);
+            System.out.println("Encoding...");
+            String data = URLEncoder.encode("image", "UTF-8") + "=" + URLEncoder.encode(Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT));
+            data += "&" + URLEncoder.encode("key", "UTF-8") + "=" + URLEncoder.encode(IMGUR_API_KEY, "UTF-8");
 
-//encodes picture with Base64 and inserts api key
-        String data = null;
-        try {
-            data = URLEncoder.encode("image", "UTF-8") + "=" + URLEncoder.encode(Base64.encode(baos.toByteArray(), Base64.DEFAULT).toString(), "UTF-8");
-            //data += "&" + URLEncoder.encode("key", "UTF-8") + "=" + URLEncoder.encode("0d9f6713d9e784a", "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            msg = "Error: " + e.getMessage();
-        }
-
-// opens connection and sends data
-        HttpURLConnection conn = null;
-        try {
-            conn = (HttpURLConnection)url.openConnection();
-            conn.setRequestProperty("Authorization", "Bearer 5d22c21f1e1d83bcc1d0169faf47b4526810f910");
+            System.out.println("Connecting...");
+            URLConnection conn = url.openConnection();
             conn.setDoOutput(true);
+            conn.setDoInput(true);
+            conn.setRequestProperty("Authorization", "Client-ID " + IMGUR_API_KEY);
+            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+
             OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+
+            System.out.println("Sending data...");
             wr.write(data);
             wr.flush();
 
-            // Get the response
-            BufferedReader rd = new BufferedReader(
-                    new InputStreamReader(conn.getInputStream()));
+            System.out.println("Finished.");
 
-            String line;
-            while ((line = rd.readLine()) != null) {
-                Log.d("línea:",line);
+            //just display the raw response
+            BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            String line, response;
+            response = "";
+            while ((line = in.readLine()) != null) {
+                System.out.println(line);
+                response = line;
             }
-            wr.close();
-            rd.close();
+            // Leemos la respuesta, una línea codificada en JSON:
+            JSONParser parser=new JSONParser();
+            try {
+                Object obj = parser.parse(response);
+                JSONObject jsonObj = (JSONObject) obj;
+                JSONObject jData = (JSONObject)jsonObj.get("data");
+                this.url = (String)jData.get("link");
+                Log.d("Enlace obtenido",this.url);
+            } catch (org.json.simple.parser.ParseException e) {
+                e.printStackTrace();
+            }
 
-            this.url = url.getPath();
-            Log.d("Imagen subida", data);
-        } catch (IOException e) {
+            in.close();
+
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
             e.printStackTrace();
-            msg = "Error: " + e.getMessage();
+            msg = e.getMessage();
         }
-
         return msg;
     }
 
