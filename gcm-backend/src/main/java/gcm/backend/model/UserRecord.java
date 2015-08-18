@@ -17,22 +17,17 @@ public class UserRecord {
     @Index
     @Id
     Long id;
-
     @Index
     private String name;
-
     @Index
     private String regId;
-    // you can add more fields...
-
     @Index
     private String email;
     private String password;
-
     private String friends;
-
     private String friendRequestsReceived;
     private String friendRequestsSent;
+    private String profilePic;
 
     public UserRecord() {
     }
@@ -99,6 +94,14 @@ public class UserRecord {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getProfilePic() {
+        return profilePic;
+    }
+
+    public void setProfilePic(String profilePic) {
+        this.profilePic = profilePic;
     }
 
 

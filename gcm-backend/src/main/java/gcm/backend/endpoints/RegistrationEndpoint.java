@@ -61,6 +61,7 @@ public class RegistrationEndpoint {
         record.setFriends("[]");
         record.setFriendRequestsSent("[]");
         record.setFriendRequestsReceived("[]");
+        record.setProfilePic("https://upload.wikimedia.org/wikipedia/commons/9/91/Default_User_Logo.jpg");
         ofy().save().entity(record).now();
 
     }

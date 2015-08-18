@@ -83,12 +83,7 @@ public class UploadImageAsyncTask extends AsyncTask<Context, Void, String> {
 
             //just display the raw response
             BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            String line, response;
-            response = "";
-            while ((line = in.readLine()) != null) {
-                System.out.println(line);
-                response = line;
-            }
+            String response = in.readLine();
             // Leemos la respuesta, una línea codificada en JSON:
             JSONParser parser=new JSONParser();
             try {

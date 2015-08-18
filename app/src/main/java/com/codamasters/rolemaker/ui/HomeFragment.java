@@ -1,6 +1,7 @@
 package com.codamasters.rolemaker.ui;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -44,10 +45,11 @@ public class HomeFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_SECTION_NUMBER = "section_number";
     private static final int REQUEST_CODE = 1;
-    Button bShowUsers,bShowFriends, bShowRequests, bCreateGame, bJoinGame, bMyGames, bUploadPhoto, bDownloadPhoto;
+    Button bShowUsers,bShowFriends, bShowRequests, bCreateGame, bJoinGame, bMyGames, bUploadPhoto;
     private static ImageView imageView;
     private static Bitmap image;
     private static String url;
+    private static Context context;
 
 
     private OnFragmentInteractionListener mListener;
@@ -129,7 +131,6 @@ public class HomeFragment extends Fragment {
         bJoinGame=(Button) rootView.findViewById(R.id.bJoinGame);
         bMyGames=(Button) rootView.findViewById(R.id.bMyGames);
         bUploadPhoto=(Button) rootView.findViewById(R.id.bUploadPhoto);
-        bDownloadPhoto=(Button) rootView.findViewById(R.id.bDownloadPhoto);
         imageView = (ImageView) rootView.findViewById(R.id.imageView);
         setListeners();
         return rootView;
@@ -184,14 +185,6 @@ public class HomeFragment extends Fragment {
 
             }
         });
-
-        bDownloadPhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                new DownloadImageAsyncTask(getActivity(), url).execute();
-            }
-        });
     }
 
     public static void setImage(Bitmap bmp){
@@ -200,6 +193,7 @@ public class HomeFragment extends Fragment {
 
     public static void setURL(String u){
         url = u;
+        new DownloadImageAsyncTask(context, url,0).execute();
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -238,7 +232,7 @@ public class HomeFragment extends Fragment {
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d("Subiendo imagen", "");
+        context = this.getActivity();
             try {
                 // We need to recyle unused bitmaps
                 if (image != null) {

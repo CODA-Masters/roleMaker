@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 
 import com.codamasters.rolemaker.ui.HomeFragment;
+import com.codamasters.rolemaker.ui.ProfileFragment;
 import com.codamasters.rolemaker.utils.Constants;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
@@ -22,27 +23,17 @@ import gcm.backend.registration.Registration;
  */
 public class DownloadImageAsyncTask extends AsyncTask<Context, Void, String> {
     private Context context;
-    private ProgressDialog pDialog;
     private Bitmap bmp;
     private String url;
+    private int callerID; // Identificador de clase que lo llama. Según el cual llamará a un método u otro al terminar
 
     // TODO: change to your own sender ID to Google Developers Console project number, as per instructions above
     private static final String SENDER_ID = Constants.SENDER_ID;
 
-    public DownloadImageAsyncTask(Context context, String url) {
+    public DownloadImageAsyncTask(Context context, String url, int callerID) {
         this.context = context;
         this.url = url;
-    }
-
-
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-        // Showing progress dialog
-        pDialog = new ProgressDialog(context);
-        pDialog.setMessage("Downloading image");
-        pDialog.setCancelable(false);
-        pDialog.show();
+        this.callerID = callerID;
     }
 
     @Override
@@ -71,10 +62,10 @@ public class DownloadImageAsyncTask extends AsyncTask<Context, Void, String> {
     protected void onPostExecute(String msg) {
         super.onPostExecute(msg);
 
-        if (pDialog.isShowing())
-            pDialog.dismiss();
-
-        HomeFragment.setImage(bmp);
+        switch (callerID){
+            case 0: HomeFragment.setImage(bmp); break;
+            case 1: ProfileFragment.setImage(bmp);
+        }
 
     }
 }
